@@ -1,3 +1,5 @@
+package src.main.java;
+
 public class Player {
 	private String username;
 	private double accuracy;
@@ -5,10 +7,17 @@ public class Player {
 	private int cryptogramsPlayed;
 	private int cryptogramsCompleted;
 
-	public void updateAccuracy() {}
+	public Player(String name) {
+		username = name;
+		totalGuesses = 0;
+		cryptogramsCompleted = 0;
+		cryptogramsPlayed = 0;
+		accuracy = 0.0;
+	}
 
 	// SETTERS
 
+	public void updateAccuracy() {}
 	public void incrementCryptogramsCompleted() {
         cryptogramsCompleted++;
     }
@@ -26,7 +35,7 @@ public class Player {
 		return username;
 	}
 
-	public int totalGuesses() {
+	public int getTotalGuesses() {
 		return totalGuesses;
 	}
 
