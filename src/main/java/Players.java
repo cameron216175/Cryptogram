@@ -1,3 +1,5 @@
+package src.main.java;
+
 import java.io.FileWriter;
 import java.io.IOException;  
 public class Players {
@@ -7,7 +9,7 @@ public class Players {
     public void addPlayer(Player p) {
         try {
            FileWriter playerWriter = new FileWriter("./playerData.csv");
-           playerWriter.append(p.getUsername()+","+Integer.toString(p.totalGuesses())+","+Integer.toString(p.getNumCryptogramsCompleted())+","+Integer.toString(p.getNumCryptogramsPlayed())+","+Double.toString(p.getAccuracy()));
+           playerWriter.append(p.getUsername()+","+Integer.toString(p.getTotalGuesses())+","+Integer.toString(p.getNumCryptogramsCompleted())+","+Integer.toString(p.getNumCryptogramsPlayed())+","+Double.toString(p.getAccuracy()));
            playerWriter.close(); 
         } catch (IOException e) {
             System.out.println("An error has occured.");

@@ -1,10 +1,18 @@
+package src.test.java;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import src.main.java.Player;
+import src.main.java.Players;
 
 class PlayersTest {
+    private Player player;
+    private Players players ;
+
     @BeforeEach
     void setUp() {
-        // Setup code here
+        player = new Player("john doe");
+        players = new Players();
     }
 
     @Test
