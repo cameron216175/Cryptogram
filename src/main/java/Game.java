@@ -1,4 +1,3 @@
-package src.main.java;
 public class Game {
     private char[] playerGameMapping;
     Player currentPlayer = new Player();
