@@ -13,7 +13,11 @@ public class Game {
 
     public void playGame() {}
 
-    public void generateCryptogram() {}
+    public void generateCryptogram() {
+        LetterCryptogram letter_cryptogram = new LetterCryptogram();
+
+
+    }
 
     public void enterLetter() {}
 
