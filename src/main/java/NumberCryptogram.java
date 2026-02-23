@@ -1,4 +1,3 @@
-package src.main.java;
 public class NumberCryptogram extends Cryptogram {
     protected Object cryptogramAlphabet;
 

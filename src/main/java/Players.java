@@ -1,4 +1,3 @@
-package src.main.java;
 import java.io.FileWriter;
 import java.io.IOException;  
 public class Players {
