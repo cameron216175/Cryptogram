@@ -7,6 +7,8 @@ public class Player {
 
 	public void updateAccuracy() {}
 
+	// SETTERS
+
 	public void incrementCryptogramsCompleted() {
         cryptogramsCompleted++;
     }
@@ -14,9 +16,19 @@ public class Player {
         cryptogramsPlayed++;
     }
 
+	// GETTERS
+
 	public double getAccuracy() {
         return accuracy;
     }
+
+	public String getUsername() {
+		return username;
+	}
+
+	public int totalGuesses() {
+		return totalGuesses;
+	}
 
 	public int getNumCryptogramsCompleted() {
         return cryptogramsCompleted;
