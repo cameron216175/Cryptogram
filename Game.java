@@ -1,11 +1,10 @@
 public class Game {
-    public Game() {
-        char[] playerGameMapping;
-    }
+    private char[] playerGameMapping;
+    Player currentPlayer = new Player();
 
-    // public void Game(Player p, String cryptType) {}
+    public void Game(Player p, String cryptType) {}
 
-    // public void Game(Player p) {}
+    public void Game(Player p) {}
 
     public void getHint () {}
 
