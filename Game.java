@@ -23,16 +23,21 @@ public class Game {
 
         if (input.equals("numbers")) {
             System.out.println("Creating numbers cryptogram");
+            NumberCryptogram number_cryptogram = new NumberCryptogram();
+            System.out.print("The cryptogram is: " + number_cryptogram.getEncryptedPhrase());
         }
 
         else if (input.equals("letters")) {
             System.out.println("Creating letters cryptogram");
             LetterCryptogram letter_cryptogram = new LetterCryptogram();
+            System.out.print("The cryptogram is: " + letter_cryptogram.getEncryptedPhrase());
         }
 
         else{
             System.out.println("Invalid input");
         }
+
+
     }
 
     public void enterLetter() {}
@@ -41,7 +46,7 @@ public class Game {
     
     public void viewFrequencies() {}
 
-    public void saveGane() {}
+    public void saveGame() {}
 
     public void loadGame() {}
 
