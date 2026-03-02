@@ -1,10 +1,9 @@
-import java.util.Scanner;
-
 package src.main.java;
+import java.util.Scanner;
 
 public class Game {
     private char[] playerGameMapping;
-    Player currentPlayer = new Player();
+    Player currentPlayer = new Player("");
 
     public void Game(Player p, String cryptType) {}
 

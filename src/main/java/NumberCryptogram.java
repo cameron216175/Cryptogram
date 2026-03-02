@@ -1,3 +1,5 @@
+package src.main.java;
+
 import java.util.Arrays;
 import java.util.Random;
 
