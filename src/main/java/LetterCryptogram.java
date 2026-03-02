@@ -23,7 +23,6 @@ public class LetterCryptogram extends Cryptogram {
 
         //Fill string with encrypted letters
         createEncryptedAlphabet(encryptedAlphabet);
-        System.out.println("Encrypted Alphabet: " + encryptedAlphabet);
 
         //Loop through entire phrase
         for(int i = 0; i < phrase.length(); i++) {
