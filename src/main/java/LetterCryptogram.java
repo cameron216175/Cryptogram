@@ -2,13 +2,14 @@ package src.main.java;
 
 import java.lang.String;
 import java.lang.Character;
+import java.util.Arrays;
 import java.util.Random;
 
 
 public class LetterCryptogram extends Cryptogram {
 
     //Initialise string to store encrypted letters
-    protected StringBuilder encryptedAlphabet = new StringBuilder();
+    protected char[] encrypted_alphabet = new char[26];
 
     //If loading a saved cryptogram
     public LetterCryptogram(String file) {}
@@ -19,11 +20,12 @@ public class LetterCryptogram extends Cryptogram {
         //Initialise variables
         int pos = 0;
         boolean uppercase = false;
-        String alphabet = "abcdefghijklmnopqrstuvwxyz";
+        int x = 0;
 
         //Fill string with encrypted letters
-        createEncryptedAlphabet(encryptedAlphabet);
-        System.out.println("Encrypted Alphabet: " + encryptedAlphabet);
+        createEncryptedAlphabet(encrypted_alphabet);
+
+        String[] encrypted_phrase = getEncryptedPhrase();
 
         //Loop through entire phrase
         for(int i = 0; i < phrase.length(); i++) {
@@ -45,63 +47,52 @@ public class LetterCryptogram extends Cryptogram {
                 }
 
                 //Compare character from phrase at with every letter in the alphabet
-                for(int j = 0; j < alphabet.length(); j++) {
-
-                    //When a match is found
-                    if(ch == alphabet.charAt(j)) {
-                        pos = j;
-
-                        //Set letter to the value in the cryptogram alphabet at the corresponding position
-                        char letter = encryptedAlphabet.charAt(pos);
-
-                        //Set letter to uppercase if it previously was
-                        if(uppercase) {
-                            letter = Character.toUpperCase(letter);
-                        }
-                        //Append encrypted letter to end of the encrypted phrase
-                        getEncryptedPhrase().append(letter);
-                    }
-                }
-
+                int idx = ch - 'a';
+                char encrypted_letter = encrypted_alphabet[idx];
+                encrypted_phrase[x] = encrypted_letter + " ";
             }
 
             //If character is not a letter, then append it to the end of the encrypted phrase
             else{
-                getEncryptedPhrase().append(ch);
+                encrypted_phrase[x] = "  ";
             }
+            x++;
 
         }
     }
 
-    public void createEncryptedAlphabet(StringBuilder cryptogramAlphabet){
+    public void createEncryptedAlphabet(char[] cryptogram_alphabet){
         Random rand = new Random();
 
-        //Initialise variables
-        int shift = rand.nextInt(100);
+        //Initialise alphabet string
         String alphabet = "abcdefghijklmnopqrstuvwxyz";
 
+        //Initialise shift was a random number 1-26
+        int shift = rand.nextInt(26);
         shift = shift % 26;
 
+        int idx = 0;
         for (char c : alphabet.toCharArray()) {
 
             //Encryption if letter is upper case
             if (Character.isUpperCase(c)) {
                 char encrypted = (char) ((c - 'A' + shift) % 26 + 'A');
-                cryptogramAlphabet.append(encrypted);
+                cryptogram_alphabet[idx] = encrypted;
             }
 
             //Encryption if letter is lower case
             else if(Character.isLowerCase(c)){
                 char encrypted = (char) ((c - 'a' + shift) % 26 + 'a');
-                cryptogramAlphabet.append(encrypted);
+                cryptogram_alphabet[idx] = encrypted;
             }
+            idx++;
         }
     }
 
     public void getPlainLetter(char cryptoLetter) {}
 
 
-    public StringBuilder getCryptogramAlphabet(){
-        return encryptedAlphabet;
+    public char[] getCryptogram_alphabet(){
+        return encrypted_alphabet;
     }
 }
