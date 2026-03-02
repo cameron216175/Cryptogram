@@ -16,7 +16,8 @@ class PlayersTest {
     }
 
     @Test
-    void testExample() {
-        // Test code here
+    void testAddPlayers() {
+        players.addPlayer(player);
+
     }
 }
