@@ -1,5 +1,3 @@
-package src.main.java;
-
 import java.lang.String;
 import java.lang.Character;
 import java.util.Random;
