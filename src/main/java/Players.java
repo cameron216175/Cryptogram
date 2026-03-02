@@ -9,7 +9,12 @@ public class Players {
     public void addPlayer(Player p) {
         try {
            FileWriter playerWriter = new FileWriter("./playerData.csv");
-           playerWriter.append(p.getUsername()+","+Integer.toString(p.getTotalGuesses())+","+Integer.toString(p.getNumCryptogramsCompleted())+","+Integer.toString(p.getNumCryptogramsPlayed())+","+Double.toString(p.getAccuracy()));
+           playerWriter
+                   .append(p.getUsername())
+                   .append(",").append(String.valueOf(p.getTotalGuesses()))
+                   .append(",").append(String.valueOf(p.getNumCryptogramsCompleted()))
+                   .append(",").append(String.valueOf(p.getNumCryptogramsPlayed()))
+                   .append(",").append(String.valueOf(p.getAccuracy()));
            playerWriter.close(); 
         } catch (IOException e) {
             System.out.println("An error has occured.");
