@@ -125,18 +125,6 @@ public class Game {
             }
         }
 
-        //Print error if player game mapping is full
-        for (String str : playerGameMapping) {
-            if (str.charAt(0) != '-') {
-                isFull = false;
-                break;
-            }
-        }
-        if(isFull){
-            System.out.println("Error, you have already made a guess for every encrypted value!");
-            return;
-        }
-
         //Store encrypted phrase in a variable
         String[] encrypted_phrase = cryptogram.getEncryptedPhrase();
 
@@ -180,6 +168,26 @@ public class Game {
                             playerGameMapping[i] = letter + " ";
                             letter = Character.toLowerCase(letter);
 
+                            //Check if user has filled out cryptogram
+                            for (String str : playerGameMapping) {
+                                if (str.charAt(0) == '-') {
+                                    isFull = false;
+                                    break;
+                                }
+                            }
+                            //Check if user has successfully completed cryptogram
+                            if(isFull){
+                                int x = 0;
+                                for(String str : playerGameMapping){
+                                    if (str.charAt(x) != cryptogram.getPhrase().charAt(x)) {
+                                        System.out.print("Incorrect guess!");
+                                        return;
+                                    }
+                                    System.out.print("Correct guess!");
+                                    return;
+                                }
+                            }
+
                         }
                         //Print error and return if player has already made a guess for the encrypted char
                         else {
@@ -191,7 +199,7 @@ public class Game {
             }
             //Print error if encrypted char was not in the encrypted phrase
             if(!found) {
-                System.out.println("Error, " + encrypted_char + "was not found within the cryptogram!\n");
+                System.out.println("Error, " + encrypted_char + " was not found within the cryptogram!\n");
             }
         }
         //Only run if a numbers cryptogram was made
@@ -210,6 +218,26 @@ public class Game {
                     //Store letter in playerGameMapping if guess has not already been made there
                     if(playerGameMapping[i].equals("- ")) {
                         playerGameMapping[i] = letter + " ";
+
+                        //Check if user has filled out cryptogram
+                        for (String str : playerGameMapping) {
+                            if (str.charAt(0) == '-') {
+                                isFull = false;
+                                break;
+                            }
+                        }
+                        //Check if user has successfully completed cryptogram
+                        if(isFull){
+                            int x = 0;
+                            for(String str : playerGameMapping){
+                                if (str.charAt(x) != cryptogram.getPhrase().charAt(x)) {
+                                    System.out.print("Incorrect guess!");
+                                    return;
+                                }
+                                System.out.print("Correct guess!");
+                                return;
+                            }
+                        }
 
                     }
                     //Print error and return if player has already made a guess for the encrypted number
