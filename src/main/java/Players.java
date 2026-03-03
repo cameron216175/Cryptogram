@@ -1,9 +1,6 @@
 package src.main.java;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -78,11 +75,11 @@ public class Players {
 
         return null;
     }
-    public void getAllPlayersAccuracies() {
+    public List<String> getAllPlayersAccuracies() {
+        List<String> stats = new ArrayList<>();
         File players = new File("./playerData.csv");
 
         try (Scanner reader = new Scanner(players)) {
-            List<String> stats = new ArrayList<>();
             while (reader.hasNextLine()) {
                 String player = reader.nextLine();
                 String regex = ",";
@@ -93,13 +90,15 @@ public class Players {
             System.out.println("An error has occured.");
             e.printStackTrace();
         }
+        return stats;
     }
 
-    public void getAllPlayersCryptogramsPlayed() {
+    public List<String> getAllPlayersCryptogramsPlayed() {
+        List<String> stats = new ArrayList<>();
         File players = new File("./playerData.csv");
 
         try (Scanner reader = new Scanner(players)) {
-            List<String> stats = new ArrayList<>();
+
             while (reader.hasNextLine()) {
                 String player = reader.nextLine();
                 String regex = ",";
@@ -110,12 +109,13 @@ public class Players {
             System.out.println("An error has occured.");
             e.printStackTrace();
         }
+        return stats;
     }
-    public void getAllPlayersCompletedCryptos() {
+    public List<String> getAllPlayersCompletedCryptos() {
+        List<String> stats = new ArrayList<>();
         File players = new File("./playerData.csv");
 
         try (Scanner reader = new Scanner(players)) {
-            List<String> stats = new ArrayList<>();
             while (reader.hasNextLine()) {
                 String player = reader.nextLine();
                 String regex = ",";
@@ -126,5 +126,12 @@ public class Players {
             System.out.println("An error has occured.");
             e.printStackTrace();
         }
+        return stats;
+    }
+
+    public void clearPlayers() throws FileNotFoundException {
+        PrintWriter writer = new PrintWriter("./playerData.csv");
+        writer.print("");
+        writer.close();
     }
 }
