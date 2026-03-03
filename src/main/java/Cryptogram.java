@@ -11,6 +11,8 @@ public class Cryptogram {
 
     private static final String FILEPATH = "src/phrases.txt";
 
+    protected final String cryptogramAlphabet = "poiuytrewqlkjhgfdsamnbvcxz";
+
     protected ArrayList<String> phrases;
 
     protected String originalPhrase;
@@ -27,7 +29,6 @@ public class Cryptogram {
 
 
     //To be handled
-    protected Object cryptogramAlphabet;
     public void getFrequencies() {}
     //To be handled
 
