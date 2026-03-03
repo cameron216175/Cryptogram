@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Cryptogram {
     protected String phrase = "This is a test cryptogram";
-    private final String[] encrypted_phrase = new String[phrase.length()];
+    protected final String[] encrypted_phrase = new String[phrase.length()];
 
     public void getFrequencies() {}
 
