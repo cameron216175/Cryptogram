@@ -6,6 +6,8 @@ public class Game {
     private String[] playerGameMapping;
     Player currentPlayer = new Player("");
     private String crypto_type = "";
+    private String[] guessHistory = new String[26];
+    private int guessCount = 0;
 
     public static void main(String[] args) {
         Game game = new Game();
@@ -38,8 +40,14 @@ public class Game {
         boolean exit = false;
 
         while(!exit) {
-            System.out.print("Enter a letter: \n");
-            char letter = sc.nextLine().charAt(0);
+            System.out.print("Enter a letter, or type undo: \n");
+            String letterGuess = sc.nextLine();
+
+            if (letterGuess.equals("undo")){
+                game.undoLetter(cryptogram);
+                continue;
+            }
+            char letter = letterGuess.charAt(0);
 
             String encrypted_guess = "";
 
@@ -179,6 +187,8 @@ public class Game {
                         if (playerGameMapping[i].equals("- ")) {
                             playerGameMapping[i] = letter + " ";
                             letter = Character.toLowerCase(letter);
+                            guessHistory[guessCount] = encrypted_char + " ";
+                            guessCount++;
 
                         }
                         //Print error and return if player has already made a guess for the encrypted char
@@ -210,6 +220,8 @@ public class Game {
                     //Store letter in playerGameMapping if guess has not already been made there
                     if(playerGameMapping[i].equals("- ")) {
                         playerGameMapping[i] = letter + " ";
+                        guessHistory[guessCount] = encrypted_guess;
+                        guessCount++;
 
                     }
                     //Print error and return if player has already made a guess for the encrypted number
@@ -226,7 +238,24 @@ public class Game {
         }
     }
 
-    public void undoLetter() {}
+    public void undoLetter(Cryptogram cryptogram) {
+        if (guessCount == 0){
+            System.out.println("Nothing to undo!\n");
+            return;
+        }
+        guessCount--;
+        String guess = guessHistory[guessCount];
+        guessHistory[guessCount] = "";
+
+        String[] encrypted_phrase =  cryptogram.getEncryptedPhrase();
+
+        for (int i = 0; i < encrypted_phrase.length; i++) {
+            if(encrypted_phrase[i].equals(guess)){
+                playerGameMapping[i] = "- ";
+            }
+        }
+        System.out.println("undid guess for: " + guess);
+    }
     
     public void viewFrequencies() {}
 
