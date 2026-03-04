@@ -3,7 +3,7 @@ package src.main.java;
 import java.util.Random;
 
 public class Cryptogram {
-    protected String phrase = "This is a test cryptogram";
+    protected String phrase = "cr";
     protected final String[] encrypted_phrase = new String[phrase.length()];
 
     public void getFrequencies() {}

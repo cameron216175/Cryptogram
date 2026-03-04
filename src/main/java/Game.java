@@ -37,24 +37,28 @@ public class Game {
 
         boolean exit = false;
 
+        //Loop until player completes game
         while(!exit) {
-            System.out.print("Enter a letter: \n");
-            char letter = sc.nextLine().charAt(0);
-
             String encrypted_guess = "";
+            String enter_letter = "";
+            char letter;
 
+            //Get guess from player
             if(game.getCryptoType().equals("letters")){
-                System.out.print("Enter the encrypted letter you want to make a guess for: \n");
-                encrypted_guess = sc.nextLine();
+                System.out.print("\nEnter the letter you want to guess and the encrypted letter you want to map it to: (e.g. c s) \n");
             }
-            else if(game.getCryptoType().equals("numbers")){
-                System.out.print("Enter the encrypted number you want to make a guess for: \n");
-                encrypted_guess = sc.nextLine();
+            else{
+                System.out.print("\nEnter the letter you want to guess and the encrypted number you want to map it to: (e.g. c 5) \n");
             }
+            enter_letter = sc.nextLine();
+            letter = enter_letter.charAt(0);
+            encrypted_guess = enter_letter.substring(1);
+            System.out.println(encrypted_guess);
 
+            //Call enterLetter method
+            String completion = game.enterLetter(cryptogram, letter, encrypted_guess);
 
-            game.enterLetter(cryptogram, letter, encrypted_guess);
-
+            //Print current player guesses and cryptogram
             System.out.println("Player guesses and cryptogram:");
             for (int i = 0; i < game.playerGameMapping.length; i++) {
                 System.out.print(game.playerGameMapping[i]);
@@ -66,13 +70,18 @@ public class Game {
             for(String str : cryptogram.getEncryptedPhrase()) {
                 System.out.print(str);
             }
-            System.out.print("\n");
 
-            System.out.print("Do you want to exit the game?\n");
-            String end = sc.nextLine();
-            if(end.equals("yes")){
+            //Print success message if player won
+            if(completion.equals("Correct")){
+                System.out.print("\nYou have correctly completed the cryptogram!\n");
                 exit = true;
             }
+            //Print fail message if player lost
+            else if(completion.equals("Incorrect")){
+                System.out.print("\nYou have incorrectly completed the cryptogram!\n");
+                exit = true;
+            }
+
         }
     }
 
@@ -103,38 +112,39 @@ public class Game {
         }
     }
 
-    public void enterLetter(Cryptogram cryptogram, char letter, String encrypted_guess) {
+    public String enterLetter(Cryptogram cryptogram, char letter, String encrypted_guess) {
 
         //Initialise variables
         boolean isUppercase;
         letter = Character.toLowerCase(letter);
         boolean found = false;
         boolean isFull = true;
+        Scanner sc = new Scanner(System.in);
 
         //Print error and return if guess isn't a letter
         if(!Character.isLetter(letter)){
             System.out.println("Invalid input, " + letter + " is not a letter!\n");
-            return;
+            return "Error";
+        }
+
+        //Remove any whitespace from players guess
+        int i = 0;
+        for(char c : encrypted_guess.toCharArray()) {
+            if(c == ' '){
+                i++;
+            }
+            else{
+                encrypted_guess = encrypted_guess.substring(i);
+                break;
+            }
         }
 
         //Print error and return if player has already guessed the letter
         for (String str : playerGameMapping) {
             if (str.charAt(0) == Character.toLowerCase(letter) || str.charAt(0) == Character.toUpperCase(letter)) {
                 System.out.println("Error, you have already guessed " + letter + " as an answer!");
-                return;
+                return "Error";
             }
-        }
-
-        //Print error if player game mapping is full
-        for (String str : playerGameMapping) {
-            if (str.charAt(0) != '-') {
-                isFull = false;
-                break;
-            }
-        }
-        if(isFull){
-            System.out.println("Error, you have already made a guess for every encrypted value!");
-            return;
         }
 
         //Store encrypted phrase in a variable
@@ -150,7 +160,7 @@ public class Game {
 
 
             //Loop for length of encrypted phrase
-            for (int i = 0; i < encrypted_phrase.length; i++) {
+            for (i = 0; i < encrypted_phrase.length; i++) {
 
                 //Get char stored at the next element of the encrypted phrase
                 char ch = encrypted_phrase[i].charAt(0);
@@ -178,20 +188,49 @@ public class Game {
                         //Store letter in playerGameMapping if a guess has not already been made there
                         if (playerGameMapping[i].equals("- ")) {
                             playerGameMapping[i] = letter + " ";
-                            letter = Character.toLowerCase(letter);
-
                         }
+
                         //Print error and return if player has already made a guess for the encrypted char
                         else {
-                            System.out.println("Error, you have already mapped a guess to " + encrypted_char + "!\n");
-                            return;
+                            System.out.println("You have already mapped a guess to " + encrypted_char + "!\nWould you like to override it?\n");
+                            String input = sc.nextLine();
+
+                            if(input.equals("yes")){
+                                playerGameMapping[i] = letter + " ";
+                            }
+
+                            else{
+                                System.out.println("Please make another guess!");
+                            }
                         }
+
+                        letter = Character.toLowerCase(letter);
+
+                        //Check if user has filled out cryptogram
+                        for (String str : playerGameMapping) {
+                            if (str.charAt(0) == '-') {
+                                isFull = false;
+                                break;
+                            }
+                        }
+                        //Check if user has successfully completed cryptogram
+                        if(isFull){
+                            int x = 0;
+                            for(String str : playerGameMapping){
+                                if (str.charAt(x) != cryptogram.getPhrase().charAt(x)) {
+                                    return "Incorrect";
+                                }
+                                return "Correct";
+                            }
+                        }
+
                     }
                 }
             }
             //Print error if encrypted char was not in the encrypted phrase
             if(!found) {
-                System.out.println("Error, " + encrypted_char + "was not found within the cryptogram!\n");
+                System.out.println("Error, " + encrypted_char + " was not found within the cryptogram!\n");
+                return "Error";
             }
         }
         //Only run if a numbers cryptogram was made
@@ -200,7 +239,7 @@ public class Game {
             encrypted_guess = encrypted_guess + " ";
 
             //Loop through encrypted phrase
-            for (int i = 0; i < encrypted_phrase.length; i++) {
+            for (i = 0; i < encrypted_phrase.length; i++) {
                 //Get string stored at element of encrypted phrase
                 String num = encrypted_phrase[i];
 
@@ -210,20 +249,48 @@ public class Game {
                     //Store letter in playerGameMapping if guess has not already been made there
                     if(playerGameMapping[i].equals("- ")) {
                         playerGameMapping[i] = letter + " ";
-
                     }
+
                     //Print error and return if player has already made a guess for the encrypted number
                     else{
-                        System.out.println("Error, you have already mapped a guess to " + encrypted_guess.substring(0, encrypted_guess.length()-1) +"!\n");
-                        return;
+                        System.out.println("You have already mapped a guess to " + encrypted_guess.substring(0, encrypted_guess.length()-1) +"!\nWould you like to override it?\n");
+                        String input = sc.nextLine();
+
+                        if(input.equals("yes")){
+                            playerGameMapping[i] = letter + " ";
+                        }
+
+                        else{
+                            System.out.println("Please make another guess!");
+                        }
+                    }
+
+                    //Check if user has filled out cryptogram
+                    for (String str : playerGameMapping) {
+                        if (str.charAt(0) == '-') {
+                            isFull = false;
+                            break;
+                        }
+                    }
+                    //Check if user has successfully completed cryptogram
+                    if(isFull){
+                        int x = 0;
+                        for(String str : playerGameMapping){
+                            if (str.charAt(x) != cryptogram.getPhrase().charAt(x)) {
+                                return "Incorrect";
+                            }
+                            return "Correct";
+                        }
                     }
                 }
             }
             //Print error if the encrypted number was not found in the encrypted phrase
             if(!found) {
                 System.out.println("Error, " + encrypted_guess.substring(0, encrypted_guess.length()-1) + " was not found within the cryptogram!\n");
+                return "Error";
             }
         }
+        return "Incomplete";
     }
 
     public void undoLetter() {}
