@@ -89,7 +89,16 @@ public class LetterCryptogram extends Cryptogram {
         }
     }
 
-    public void getPlainLetter(char cryptoLetter) {}
+    public char getPlainLetter(char cryptoLetter) {
+        cryptoLetter = Character.toLowerCase(cryptoLetter);
+
+        for(int i = 0; i < encrypted_alphabet.length; i++) {
+            if(cryptoLetter == encrypted_alphabet[i]) {
+                return (char) ('a' + i);
+            }
+        }
+        return '?'; // If no valid character was input
+    }
 
 
     public char[] getCryptogram_alphabet(){

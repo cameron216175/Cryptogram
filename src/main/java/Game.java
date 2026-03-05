@@ -5,7 +5,9 @@ import java.util.Scanner;
 public class Game {
     private String[] playerGameMapping;
     Player currentPlayer = new Player("");
+    private String[] guessHistory = new String[26];
     private String crypto_type = "";
+    private int guessCount = 0;
 
     public static void main(String[] args) {
         Game game = new Game();
@@ -39,18 +41,22 @@ public class Game {
 
         //Loop until player completes game
         while(!exit) {
-            String encrypted_guess = "";
+
+                System.out.print("\nEnter the letter you want to guess and the encrypted letter you want to map it to: (e.g. c s) \n");
+                String letterGuess = sc.nextLine();
+
+                if (letterGuess.equals("undo")){
+                    game.undoLetter(cryptogram);
+                    continue;
+                }
+
+                String encrypted_guess = "";
             String enter_letter = "";
             char letter;
 
             //Get guess from player
-            if(game.getCryptoType().equals("letters")){
-                System.out.print("\nEnter the letter you want to guess and the encrypted letter you want to map it to: (e.g. c s) \n");
-            }
-            else{
-                System.out.print("\nEnter the letter you want to guess and the encrypted number you want to map it to: (e.g. c 5) \n");
-            }
-            enter_letter = sc.nextLine();
+
+            enter_letter = letterGuess;
             letter = enter_letter.charAt(0);
             encrypted_guess = enter_letter.substring(1);
             System.out.println(encrypted_guess);
@@ -180,6 +186,9 @@ public class Game {
                     if (ch == encrypted_char) {
                         found = true;
 
+                        guessHistory[guessCount] = encrypted_char + " ";
+                        guessCount++;
+
                         //Turn letter to uppercase if it previously was
                         if (isUppercase) {
                             letter = Character.toUpperCase(letter);
@@ -246,6 +255,10 @@ public class Game {
                 //If match is found
                 if(num.equals(encrypted_guess)) {
                     found = true;
+
+                    guessHistory[guessCount] = encrypted_guess;
+                    guessCount++;
+
                     //Store letter in playerGameMapping if guess has not already been made there
                     if(playerGameMapping[i].equals("- ")) {
                         playerGameMapping[i] = letter + " ";
@@ -293,8 +306,34 @@ public class Game {
         return "Incomplete";
     }
 
-    public void undoLetter() {}
-    
+    public void undoLetter(Cryptogram cryptogram) {
+        // If the user hasn't input a guess yet
+        if (guessCount == 0){
+            System.out.println("Nothing to undo!\n");
+            return;
+        }
+        guessCount--;
+        String guess = guessHistory[guessCount];
+        guessHistory[guessCount] = "";
+
+        String[] encrypted_phrase =  cryptogram.getEncryptedPhrase();
+        //
+        for (int i = 0; i < encrypted_phrase.length; i++) {
+           if (crypto_type.equals("letters")) {
+               char encryptedChar = encrypted_phrase[i].charAt(0);
+               if ((encryptedChar + " ").equalsIgnoreCase(guess)) {
+                   playerGameMapping[i] = "- ";
+               }
+           }
+           else if (crypto_type.equals("numbers")) {
+               if (encrypted_phrase[i].equals(guess)){
+                   playerGameMapping[i] = "- ";
+               }
+           }
+        }
+        System.out.println("undid guess for: " + guess);
+    }
+
     public void viewFrequencies() {}
 
     public void saveGame() {}
