@@ -39,44 +39,49 @@ public class Game {
 
         //Loop until player completes game
         while(!exit) {
-            System.out.println("\n\u001b[35mEnter a letter:");
-            System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
-            char letter = sc.nextLine().charAt(0);
-
             String encrypted_guess = "";
             String enter_letter = "";
             char letter;
 
             //Get guess from player
             if(game.getCryptoType().equals("letters")){
-                System.out.println("\n\u001b[35mEnter the encrypted letter you want to make a guess for:");
+                System.out.println("\n\u001b[35mEnter the letter you want to guess and the encrypted letter you want to map it to: (e.g. c s)");
                 System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
-                encrypted_guess = sc.nextLine();
             }
-            else if(game.getCryptoType().equals("numbers")){
-                System.out.println("\n\u001b[35mEnter the encrypted number you want to make a guess for:");
+            else{
+                System.out.println("\n\u001b[35mEnter the letter you want to guess and the encrypted number you want to map it to: (e.g. c 5)");
                 System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
-                encrypted_guess = sc.nextLine();
             }
+
             enter_letter = sc.nextLine();
             letter = enter_letter.charAt(0);
             encrypted_guess = enter_letter.substring(1);
-            System.out.println(encrypted_guess);
 
             //Call enterLetter method
             String completion = game.enterLetter(cryptogram, letter, encrypted_guess);
-
-            game.enterLetter(cryptogram, letter, encrypted_guess);
 
             printLineBreak("Player guesses and cryptogram");
 
             printTable(cryptogram, game);
             System.out.print("\n");
 
-            System.out.print("Do you want to exit the game?\n");
-            String end = sc.nextLine();
-            if(end.equals("yes")){
+            //Print success message if player won
+            if(completion.equals("Correct")){
+                System.out.print("\nYou have correctly completed the cryptogram!\n");
                 exit = true;
+            }
+            //Print fail message if player lost
+            else if(completion.equals("Incorrect")){
+                System.out.print("\nYou have incorrectly completed the cryptogram!\n");
+                exit = true;
+            }
+
+            if(!exit) {
+                System.out.print("Do you want to exit the game?\n");
+                String end = sc.nextLine();
+                if (end.equals("yes")) {
+                    exit = true;
+                }
             }
 
         }
