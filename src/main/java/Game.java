@@ -44,7 +44,9 @@ public class Game {
             String letterGuess = sc.nextLine();
 
             if (letterGuess.equals("undo")){
-                game.undoLetter(cryptogram);
+                System.out.println("enter encrypted letter to undo \n");
+                String undoLetter = sc.nextLine() + " ";
+                game.undoLetter(cryptogram, undoLetter);
                 continue;
             }
             char letter = letterGuess.charAt(0);
@@ -238,23 +240,37 @@ public class Game {
         }
     }
 
-    public void undoLetter(Cryptogram cryptogram) {
+    public void undoLetter(Cryptogram cryptogram, String undoLetter) {
         if (guessCount == 0){
             System.out.println("Nothing to undo!\n");
             return;
         }
-        guessCount--;
-        String guess = guessHistory[guessCount];
-        guessHistory[guessCount] = "";
+        boolean found = false;
+        for (int i = 0; i < guessCount; i++) {
+            if (guessHistory[i].equals(undoLetter)) {
+                found = true;
+                for (int j = 0; j < guessCount; j++) {
+                    guessHistory[j] = guessHistory[j + 1];
+                }
+                guessHistory[guessCount-1] = "";
+                guessCount--;
+                break;
+
+            }
+        }
+        if(!found) {
+            System.out.println("no guess found for" + undoLetter + "\n");
+        }
+
 
         String[] encrypted_phrase =  cryptogram.getEncryptedPhrase();
 
         for (int i = 0; i < encrypted_phrase.length; i++) {
-            if(encrypted_phrase[i].equals(guess)){
+            if(encrypted_phrase[i].equals(undoLetter)){
                 playerGameMapping[i] = "- ";
             }
         }
-        System.out.println("undid guess for: " + guess);
+        System.out.println("undid guess for: " + undoLetter + "\n");
     }
     
     public void viewFrequencies() {}
