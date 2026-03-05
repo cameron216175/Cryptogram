@@ -11,16 +11,16 @@ public class Game {
         Game game = new Game();
         Cryptogram cryptogram = new Cryptogram();
 
+        printTitle();
         Scanner sc = new Scanner(System.in);
-        System.out.print("Do you want a numbers or letters cryptogram?\n");
+        System.out.println("\u001b[35mEnter 0 for numbers and 1 for letters cryptogram:");
+        System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
         String input = sc.nextLine();
 
         cryptogram = game.generateCryptogram(input);
 
-        System.out.println("The cryptogram is:");
-        for(String str : cryptogram.getEncryptedPhrase()) {
-            System.out.print(str);
-        }
+        printLineBreak("The cryptogram is");
+        printTable(cryptogram, game);
         System.out.print("\n");
 
         String[] encrypted_phrase = cryptogram.getEncryptedPhrase();
@@ -38,34 +38,29 @@ public class Game {
         boolean exit = false;
 
         while(!exit) {
-            System.out.print("Enter a letter: \n");
+            System.out.println("\n\u001b[35mEnter a letter:");
+            System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
             char letter = sc.nextLine().charAt(0);
 
             String encrypted_guess = "";
 
             if(game.getCryptoType().equals("letters")){
-                System.out.print("Enter the encrypted letter you want to make a guess for: \n");
+                System.out.println("\n\u001b[35mEnter the encrypted letter you want to make a guess for:");
+                System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
                 encrypted_guess = sc.nextLine();
             }
             else if(game.getCryptoType().equals("numbers")){
-                System.out.print("Enter the encrypted number you want to make a guess for: \n");
+                System.out.println("\n\u001b[35mEnter the encrypted number you want to make a guess for:");
+                System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
                 encrypted_guess = sc.nextLine();
             }
 
 
             game.enterLetter(cryptogram, letter, encrypted_guess);
 
-            System.out.println("Player guesses and cryptogram:");
-            for (int i = 0; i < game.playerGameMapping.length; i++) {
-                System.out.print(game.playerGameMapping[i]);
-                if(encrypted_phrase[i].length() == 3){
-                    System.out.print(" ");
-                }
-            }
-            System.out.print("\n");
-            for(String str : cryptogram.getEncryptedPhrase()) {
-                System.out.print(str);
-            }
+            printLineBreak("Player guesses and cryptogram");
+
+            printTable(cryptogram, game);
             System.out.print("\n");
 
             System.out.print("Do you want to exit the game?\n");
@@ -86,13 +81,85 @@ public class Game {
 
     public void playGame() {}
 
+    public static void printTitle() {
+        System.out.println("\u001b[38;5;214m╭──────────────────────────────────────────────────────────────────────────────────────────────────────────────╮");
+        System.out.println("\u001b[34m    █████████                                  █████                                                         ");
+        System.out.println("   ███░░░░░███                                ░░███                                                          ");
+        System.out.println("  ███     ░░░  ████████  █████ ████ ████████  ███████    ██████   ███████ ████████   ██████   █████████████  ");
+        System.out.println(" ░███         ░░███░░███░░███ ░███ ░░███░░███░░░███░    ███░░███ ███░░███░░███░░███ ░░░░░███ ░░███░░███░░███ ");
+        System.out.println(" ░███          ░███ ░░░  ░███ ░███  ░███ ░███  ░███    ░███ ░███░███ ░███ ░███ ░░░   ███████  ░███ ░███ ░███ ");
+        System.out.println(" ░░███     ███ ░███      ░███ ░███  ░███ ░███  ░███ ███░███ ░███░███ ░███ ░███      ███░░███  ░███ ░███ ░███ ");
+        System.out.println("  ░░█████████  █████     ░░███████  ░███████   ░░█████ ░░██████ ░░███████ █████    ░░████████ █████░███ █████");
+        System.out.println("   ░░░░░░░░░  ░░░░░       ░░░░░███  ░███░░░     ░░░░░   ░░░░░░   ░░░░░███░░░░░      ░░░░░░░░ ░░░░░ ░░░ ░░░░░");
+        System.out.println("                          ███ ░███  ░███                         ███ ░███                                    ");
+        System.out.println("                         ░░██████   █████                       ░░██████                                     ");
+        System.out.println("                          ░░░░░░   ░░░░░                         ░░░░░░                                      ");
+        System.out.println("\u001b[38;5;214m╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────╯\u001b[0m");
+    }
+
+    public static void printLineBreak(String name) {
+        System.out.println("\n\u001b[38;5;214m╠═════════════════════════════════════╡ "+ name +" ╞═════════════════════════════════════╣\u001b[0m\n");
+    }
+
+    public static void printTable(Cryptogram cryptogram, Game game) {
+        String[] table = cryptogram.getEncryptedPhrase();
+        for (int x = 0; x < 4; x++) {
+            for (int i = 0; i < cryptogram.getEncryptedPhrase().length; i++) {
+                switch (x) {
+                    case 0 : {
+                        if (i == 0) {
+                            System.out.print("\u001b[38;5;214m╭─────╥");
+                        } else if (i == cryptogram.getEncryptedPhrase().length - 1) {
+                            System.out.println("\u001b[38;5;214m─────╮");
+                        } else {
+                            System.out.print("\u001b[38;5;214m─────╥");
+                        }
+                        break;
+                    }
+                    case 1 : {
+                        String display;
+                        if (table[i].equals("  ")) {
+                            display = "░";
+                        } else if (game.playerGameMapping != null && !game.playerGameMapping[i].equals("  ") &&  !game.playerGameMapping[i].equals("- ")) {
+                            display = "\u001b[32m"+String.valueOf(game.playerGameMapping[i].charAt(0));
+                        } else {
+                            display = "-";
+                        }
+                        System.out.print("\u001b[34m   " + display + "  \u001b[0m");
+                        break;
+                    }
+                    case 2 : {
+                        if (i == 0) {
+                            System.out.print("\n\u001b[38;5;214m╰─────╫");
+                        } else if (i == cryptogram.getEncryptedPhrase().length - 1) {
+                            System.out.println("\u001b[38;5;214m─────╯");
+
+                        } else {
+                            System.out.print("\u001b[38;5;214m─────╫");
+                        }
+                        break;
+                    }
+                    case 3 : {
+                        String label = table[i];
+                        System.out.print("\u001b[34m   " + label + " \u001b[0m");
+                        break;
+                    }
+                }
+
+
+            }
+        }
+
+
+    }
+
     public Cryptogram generateCryptogram(String input) {
-        if (input.equals("numbers")) {
+        if (input.equals("0")) {
             crypto_type = "numbers";
             return new NumberCryptogram();
         }
 
-        else if (input.equals("letters")) {
+        else if (input.equals("1")) {
             crypto_type = "letters";
             return new LetterCryptogram();
         }
