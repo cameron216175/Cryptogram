@@ -14,7 +14,6 @@ public class NumberCryptogram extends Cryptogram {
     //If creating new cryptogram
     public NumberCryptogram() {
         //Initialise variables
-        int pos = 0;
         int x = 0;
 
 

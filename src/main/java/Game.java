@@ -9,7 +9,6 @@ public class Game {
 
     public static void main(String[] args) {
         Game game = new Game();
-        Cryptogram cryptogram = new Cryptogram();
 
         printTitle();
         Scanner sc = new Scanner(System.in);
@@ -17,13 +16,11 @@ public class Game {
         System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
         String input = sc.nextLine();
 
-        cryptogram = game.generateCryptogram(input);
+        Cryptogram cryptogram = game.generateCryptogram(input);
 
         printLineBreak("The cryptogram is");
         printTable(cryptogram, game);
         System.out.print("\n");
-
-        String[] encrypted_phrase = cryptogram.getEncryptedPhrase();
 
         game.playerGameMapping = new String[cryptogram.phrase.length()];
 
@@ -75,15 +72,6 @@ public class Game {
                 System.out.print("\nYou have incorrectly completed the cryptogram!\n");
                 exit = true;
             }
-
-            if(!exit) {
-                System.out.print("Do you want to exit the game?\n");
-                String end = sc.nextLine();
-                if (end.equals("yes")) {
-                    exit = true;
-                }
-            }
-
         }
     }
 
@@ -194,6 +182,8 @@ public class Game {
         boolean found = false;
         boolean isFull = true;
         Scanner sc = new Scanner(System.in);
+        boolean yes_override = false;
+        boolean no_override = false;
 
         //Print error and return if guess isn't a letter
         if(!Character.isLetter(letter)){
@@ -264,40 +254,29 @@ public class Game {
                             playerGameMapping[i] = letter + " ";
                         }
 
-                        //Print error and return if player has already made a guess for the encrypted char
+                        //Allow player to override their guess
                         else {
-                            System.out.println("You have already mapped a guess to " + encrypted_char + "!\nWould you like to override it?\n");
-                            String input = sc.nextLine();
+                            if(!yes_override && !no_override) {
+                                System.out.println("You have already mapped a guess to " + encrypted_char + "!\nPlease enter '1' to override it!\n");
+                                String input = sc.nextLine();
 
-                            if(input.equals("yes")){
+                                if(input.equals("1")){
+                                    System.out.println("Overriding!");
+                                    yes_override = true;
+                                }
+                                else {
+                                    System.out.println("Not overriding!");
+                                    no_override = true;
+
+                                }
+                            }
+                            if(yes_override){
                                 playerGameMapping[i] = letter + " ";
                             }
 
-                            else{
-                                System.out.println("Please make another guess!");
-                            }
                         }
 
                         letter = Character.toLowerCase(letter);
-
-                        //Check if user has filled out cryptogram
-                        for (String str : playerGameMapping) {
-                            if (str.charAt(0) == '-') {
-                                isFull = false;
-                                break;
-                            }
-                        }
-                        //Check if user has successfully completed cryptogram
-                        if(isFull){
-                            int x = 0;
-                            for(String str : playerGameMapping){
-                                if (str.charAt(x) != cryptogram.getPhrase().charAt(x)) {
-                                    return "Incorrect";
-                                }
-                                return "Correct";
-                            }
-                        }
-
                     }
                 }
             }
@@ -320,41 +299,32 @@ public class Game {
                 //If match is found
                 if(num.equals(encrypted_guess)) {
                     found = true;
+
                     //Store letter in playerGameMapping if guess has not already been made there
                     if(playerGameMapping[i].equals("- ")) {
                         playerGameMapping[i] = letter + " ";
                     }
 
-                    //Print error and return if player has already made a guess for the encrypted number
-                    else{
-                        System.out.println("You have already mapped a guess to " + encrypted_guess.substring(0, encrypted_guess.length()-1) +"!\nWould you like to override it?\n");
-                        String input = sc.nextLine();
+                    //Allow player to override their guess
+                    else {
+                        if(!yes_override && !no_override) {
+                            System.out.println("You have already mapped a guess to " + encrypted_guess.substring(0, encrypted_guess.length() - 1) + "!\nPlease enter 1 to override it!\n");
+                            String input = sc.nextLine();
 
-                        if(input.equals("yes")){
+                            if(input.equals("1")){
+                                System.out.println("Overriding!");
+                                yes_override = true;
+                            }
+                            else {
+                                System.out.println("Not overriding!");
+                                no_override = true;
+
+                            }
+                        }
+                        if(yes_override){
                             playerGameMapping[i] = letter + " ";
                         }
 
-                        else{
-                            System.out.println("Please make another guess!");
-                        }
-                    }
-
-                    //Check if user has filled out cryptogram
-                    for (String str : playerGameMapping) {
-                        if (str.charAt(0) == '-') {
-                            isFull = false;
-                            break;
-                        }
-                    }
-                    //Check if user has successfully completed cryptogram
-                    if(isFull){
-                        int x = 0;
-                        for(String str : playerGameMapping){
-                            if (str.charAt(x) != cryptogram.getPhrase().charAt(x)) {
-                                return "Incorrect";
-                            }
-                            return "Correct";
-                        }
                     }
                 }
             }
@@ -364,6 +334,25 @@ public class Game {
                 return "Error";
             }
         }
+
+        //Check if user has filled out cryptogram
+        for (String str : playerGameMapping) {
+            if (str.charAt(0) == '-') {
+                isFull = false;
+                break;
+            }
+        }
+        //Check if user has successfully completed cryptogram
+        if(isFull){
+            int x = 0;
+            for(String str : playerGameMapping){
+                if (str.charAt(x) != cryptogram.getPhrase().charAt(x)) {
+                    return "Incorrect";
+                }
+                return "Correct";
+            }
+        }
+
         return "Incomplete";
     }
 

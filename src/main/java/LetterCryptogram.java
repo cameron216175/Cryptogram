@@ -18,8 +18,6 @@ public class LetterCryptogram extends Cryptogram {
     public LetterCryptogram() {
 
         //Initialise variables
-        int pos = 0;
-        boolean uppercase = false;
         int x = 0;
 
         //Fill string with encrypted letters
@@ -35,16 +33,8 @@ public class LetterCryptogram extends Cryptogram {
             //If the character is a letter
             if(Character.isLetter(ch)) {
 
-                //If the character is uppercase, then keep track and set it to lowercase
-                if(Character.isUpperCase(ch)) {
-                    uppercase = true;
-                    ch = Character.toLowerCase(ch);
-                }
-
-                //Keep track if character is lowercase
-                else{
-                    uppercase = false;
-                }
+                //set lowercase
+                ch = Character.toLowerCase(ch);
 
                 //Compare character from phrase at with every letter in the alphabet
                 int idx = ch - 'a';
