@@ -277,25 +277,6 @@ public class Game {
                         }
 
                         letter = Character.toLowerCase(letter);
-
-                        //Check if user has filled out cryptogram
-                        for (String str : playerGameMapping) {
-                            if (str.charAt(0) == '-') {
-                                isFull = false;
-                                break;
-                            }
-                        }
-                        //Check if user has successfully completed cryptogram
-                        if(isFull){
-                            int x = 0;
-                            for(String str : playerGameMapping){
-                                if (str.charAt(x) != cryptogram.getPhrase().charAt(x)) {
-                                    return "Incorrect";
-                                }
-                                return "Correct";
-                            }
-                        }
-
                     }
                 }
             }
@@ -345,24 +326,6 @@ public class Game {
                         }
 
                     }
-
-                    //Check if user has filled out cryptogram
-                    for (String str : playerGameMapping) {
-                        if (str.charAt(0) == '-') {
-                            isFull = false;
-                            break;
-                        }
-                    }
-                    //Check if user has successfully completed cryptogram
-                    if(isFull){
-                        int x = 0;
-                        for(String str : playerGameMapping){
-                            if (str.charAt(x) != cryptogram.getPhrase().charAt(x)) {
-                                return "Incorrect";
-                            }
-                            return "Correct";
-                        }
-                    }
                 }
             }
             //Print error if the encrypted number was not found in the encrypted phrase
@@ -371,6 +334,25 @@ public class Game {
                 return "Error";
             }
         }
+
+        //Check if user has filled out cryptogram
+        for (String str : playerGameMapping) {
+            if (str.charAt(0) == '-') {
+                isFull = false;
+                break;
+            }
+        }
+        //Check if user has successfully completed cryptogram
+        if(isFull){
+            int x = 0;
+            for(String str : playerGameMapping){
+                if (str.charAt(x) != cryptogram.getPhrase().charAt(x)) {
+                    return "Incorrect";
+                }
+                return "Correct";
+            }
+        }
+
         return "Incomplete";
     }
 
