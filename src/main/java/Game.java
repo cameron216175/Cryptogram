@@ -6,6 +6,8 @@ public class Game {
     private String[] playerGameMapping;
     Player currentPlayer = new Player("");
     private String crypto_type = "";
+    private String[] guessHistory = new String[26];
+    private int guessCount = 0;
 
     public static void main(String[] args) {
         Game game = new Game();
@@ -46,17 +48,24 @@ public class Game {
 
             //Get guess from player
             if(game.getCryptoType().equals("letters")){
-                System.out.println("\n\u001b[35mEnter the letter you want to guess and the encrypted letter you want to map it to: (e.g. c s)");
+                System.out.println("\n\u001b[35mEnter the letter you want to guess and the encrypted letter you want to map it to: (e.g. c s) or type Undo");
                 System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
             }
             else{
-                System.out.println("\n\u001b[35mEnter the letter you want to guess and the encrypted number you want to map it to: (e.g. c 5)");
+                System.out.println("\n\u001b[35mEnter the letter you want to guess and the encrypted number you want to map it to: (e.g. c 5) or type undo");
                 System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
             }
+            String letterGuess = sc.nextLine();
+            if (letterGuess.equals("undo")){
+                System.out.println("\u001b[35mEnter the encrypted letter/number you want to undo:\u001b[0m");
+                System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
+                String undoLetter = sc.nextLine() + " ";
+                game.undoLetter(cryptogram, undoLetter);
+                continue;
+            }
 
-            enter_letter = sc.nextLine();
-            letter = enter_letter.charAt(0);
-            encrypted_guess = enter_letter.substring(1);
+            letter = letterGuess.charAt(0);
+            encrypted_guess = letterGuess.substring(1);
 
             //Call enterLetter method
             String completion = game.enterLetter(cryptogram, letter, encrypted_guess);
@@ -272,6 +281,9 @@ public class Game {
                         //Store letter in playerGameMapping if a guess has not already been made there
                         if (playerGameMapping[i].equals("- ")) {
                             playerGameMapping[i] = letter + " ";
+                            letter = Character.toLowerCase(letter);
+                            guessHistory[guessCount] = encrypted_char + " ";
+                            guessCount++;
                         }
 
                         //Allow player to override their guess
@@ -293,7 +305,7 @@ public class Game {
                             if(yes_override){
                                 playerGameMapping[i] = letter + " ";
                             }
-
+                            letter = Character.toLowerCase(letter);
                         }
 
                         letter = Character.toLowerCase(letter);
@@ -323,6 +335,8 @@ public class Game {
                     //Store letter in playerGameMapping if guess has not already been made there
                     if(playerGameMapping[i].equals("- ")) {
                         playerGameMapping[i] = letter + " ";
+                        guessHistory[guessCount] = encrypted_guess;
+                        guessCount++;
                     }
 
                     //Allow player to override their guess
@@ -376,8 +390,37 @@ public class Game {
         return "Incomplete";
     }
 
-    public void undoLetter() {}
-    
+    public void undoLetter(Cryptogram cryptogram, String undoLetter) {
+        if (guessCount == 0) {
+            System.out.println("\u001b[35mNothing to undo!\u001b[0m\n");
+            return;
+        }
+        boolean found = false;
+        for (int i = 0; i < guessCount; i++) {
+            if (guessHistory[i].equals(undoLetter)) {
+                found = true;
+                for (int j = i; j < guessCount; j++) {
+                    guessHistory[j] = guessHistory[j + 1];
+                }
+                guessHistory[guessCount - 1] = "";
+                guessCount--;
+                break;
+
+            }
+        }
+        if (!found) {
+            System.out.println("\u001b[35mNo guess found for: " + undoLetter + "\u001b[0m\n");
+        } else {
+            String[] encrypted_phrase = cryptogram.getEncryptedPhrase();
+
+            for (int i = 0; i < encrypted_phrase.length; i++) {
+                if (encrypted_phrase[i].equalsIgnoreCase(undoLetter)) {
+                    playerGameMapping[i] = "- ";
+                }
+            }
+            System.out.println("\u001b[35mUndid guess for: \u001b[34m" + undoLetter + "\u001b[0m\n");
+        }
+    }
     public void viewFrequencies() {}
 
     public void saveGame() {}
