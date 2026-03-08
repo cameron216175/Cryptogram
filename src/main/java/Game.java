@@ -196,12 +196,12 @@ public class Game {
 
         //Initialise variables
         boolean isUppercase;
-        letter = Character.toLowerCase(letter);
         boolean found = false;
         boolean isFull = true;
-        Scanner sc = new Scanner(System.in);
         boolean yes_override = false;
         boolean no_override = false;
+
+        Scanner sc = new Scanner(System.in);
 
         //Print error and return if guess isn't a letter
         if(!Character.isLetter(letter)){
@@ -228,6 +228,8 @@ public class Game {
                 return "Error";
             }
         }
+
+        letter = Character.toLowerCase(letter);
 
         //Store encrypted phrase in a variable
         String[] encrypted_phrase = cryptogram.getEncryptedPhrase();
