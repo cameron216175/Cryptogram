@@ -262,7 +262,6 @@ public class Game {
             System.out.println("no guess found for" + undoLetter + "\n");
         }
 
-
         String[] encrypted_phrase =  cryptogram.getEncryptedPhrase();
 
         for (int i = 0; i < encrypted_phrase.length; i++) {
