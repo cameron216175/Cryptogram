@@ -19,7 +19,11 @@ public class Game {
         Cryptogram cryptogram = game.generateCryptogram(input);
 
         printLineBreak("The cryptogram is");
-        printTable(cryptogram, game);
+        for(int i = 0; i < cryptogram.getEncryptedPhrase().length; i++) {
+            System.out.print(cryptogram.getEncryptedPhrase()[i]);
+        }
+
+        //printTable(cryptogram, game);
         System.out.print("\n");
 
         game.playerGameMapping = new String[cryptogram.phrase.length()];
@@ -59,7 +63,23 @@ public class Game {
 
             printLineBreak("Player guesses and cryptogram");
 
-            printTable(cryptogram, game);
+            for(int i = 0; i < game.playerGameMapping.length; i++) {
+                if(cryptogram.getEncryptedPhrase()[i].length() == 3) {
+                    System.out.print(game.playerGameMapping[i] + " ");
+                }
+                else{
+                    System.out.print(game.playerGameMapping[i]);
+                }
+            }
+
+            System.out.print("\n");
+
+            for(int i = 0; i < cryptogram.getEncryptedPhrase().length; i++) {
+                System.out.print(cryptogram.getEncryptedPhrase()[i]);
+            }
+
+
+            //printTable(cryptogram, game);
             System.out.print("\n");
 
             //Print success message if player won
@@ -105,7 +125,7 @@ public class Game {
         System.out.println("\n\u001b[38;5;214m╠═════════════════════════════════════╡ "+ name +" ╞═════════════════════════════════════╣\u001b[0m\n");
     }
 
-    public static void printTable(Cryptogram cryptogram, Game game) {
+   /* public static void printTable(Cryptogram cryptogram, Game game) {
         String[] table = cryptogram.getEncryptedPhrase();
         for (int x = 0; x < 4; x++) {
             for (int i = 0; i < cryptogram.getEncryptedPhrase().length; i++) {
@@ -149,13 +169,11 @@ public class Game {
                         break;
                     }
                 }
-
-
             }
         }
-
-
     }
+
+    */
 
     public Cryptogram generateCryptogram(String input) {
         if (input.equals("0")) {
