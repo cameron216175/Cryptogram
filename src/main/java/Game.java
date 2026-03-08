@@ -4,21 +4,25 @@ import java.util.Scanner;
 
 public class Game {
     private String[] playerGameMapping;
-    Player currentPlayer = new Player("");
     private String crypto_type = "";
-    private String[] guessHistory = new String[26];
+    private String[] guessHistory;
     private int guessCount = 0;
 
     public static void main(String[] args) {
+
         Game game = new Game();
 
         printTitle();
+
         Scanner sc = new Scanner(System.in);
+
         System.out.println("\u001b[35mEnter 0 for numbers and 1 for letters cryptogram:");
         System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
         String input = sc.nextLine();
 
         Cryptogram cryptogram = game.generateCryptogram(input);
+
+        game.guessHistory = new String[cryptogram.getEncryptedPhrase().length];
 
         printLineBreak("The cryptogram is");
         for(int i = 0; i < cryptogram.getEncryptedPhrase().length; i++) {
@@ -43,7 +47,6 @@ public class Game {
         //Loop until player completes game
         while(!exit) {
             String encrypted_guess = "";
-            String enter_letter = "";
             char letter;
 
             //Get guess from player
@@ -106,7 +109,8 @@ public class Game {
 
     public void Game(Player p, String cryptType) {}
 
-    public void Game(Player p) {}
+    public void Game(Player p) {
+    }
 
     public void getHint () {}
 
