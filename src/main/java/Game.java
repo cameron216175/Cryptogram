@@ -46,9 +46,6 @@ public class Game {
 
         //Loop until player completes game
         while(!exit) {
-            System.out.println("\n\u001b[35mEnter a letter:");
-            System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
-            char letter = sc.nextLine().charAt(0);
 
             String encrypted_guess = "";
             char letter;
@@ -60,22 +57,30 @@ public class Game {
             }
             else{
                 System.out.println("\n\u001b[35mEnter the letter you want to guess and the encrypted number you want to map it to: (e.g. c 5) or type undo");
+                System.out.println("\n\u001b[35mEnter your guess followed by the encrypted letter (e.g. ac to guess that c decrypts to a):");
                 System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
             }
             else if(game.getCryptoType().equals("numbers")){
-                System.out.println("\n\u001b[35mEnter the encrypted number you want to make a guess for:");
+                System.out.println("\n\u001b[35mEnter your guess followed by the encrypted number (e.g. a3 to guess that 3 decrypts to a):");
+            String letterGuess = sc.nextLine();
+            if (letterGuess.equals("undo")){
+                System.out.println("\u001b[35mEnter the encrypted letter/number you want to undo:\u001b[0m");
                 System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
-                encrypted_guess = sc.nextLine();
             }
             enter_letter = sc.nextLine();
             letter = enter_letter.charAt(0);
             encrypted_guess = enter_letter.substring(1);
-            System.out.println(encrypted_guess);
+                String undoLetter = sc.nextLine() + " ";
+                game.undoLetter(cryptogram, undoLetter);
+                continue;
+            }
+
+            letter = letterGuess.charAt(0);
+            encrypted_guess = letterGuess.substring(1);
 
             //Call enterLetter method
+            String result = game.enterLetter(cryptogram, letter, encrypted_guess, sc);
             String completion = game.enterLetter(cryptogram, letter, encrypted_guess);
-
-            game.enterLetter(cryptogram, letter, encrypted_guess);
 
             printLineBreak("Player guesses and cryptogram");
 
@@ -108,6 +113,19 @@ public class Game {
                 System.out.print("\nYou have incorrectly completed the cryptogram!\n");
                 exit = true;
             }
+            if (result.equals("Correct")) {
+                printCompleted();
+                exit = true;
+            } else {
+                System.out.println("\u001b[35mEnter yes to exit otherwise anything else to continue cryptogram:");
+                System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
+                String end = sc.nextLine();
+                if(end.equals("yes")){
+                    exit = true;
+                }
+            }
+
+
         }
     }
 
@@ -235,6 +253,7 @@ public class Game {
             return "Error";
         }
 
+    public String trimInput (String encrypted_guess) {
         //Remove any whitespace from players guess
         int i = 0;
         for(char c : encrypted_guess.toCharArray()) {
@@ -265,6 +284,20 @@ public class Game {
                 return "Error";
             }
         }
+        return encrypted_guess;
+    }
+
+    public String enterLetter(Cryptogram cryptogram, char letter, String encrypted_guess, Scanner sc) {
+
+        //Initialise variables
+        boolean isUppercase;
+        letter = Character.toLowerCase(letter);
+        boolean found = false;
+        boolean isFull = true;
+
+        encrypted_guess = trimInput(encrypted_guess);
+        if (isValidGuess(letter, encrypted_guess).equals("Error")) return "Error";
+
 
         letter = Character.toLowerCase(letter);
 
@@ -319,6 +352,9 @@ public class Game {
                             if(!yes_override && !no_override) {
                                 System.out.println("You have already mapped a guess to " + encrypted_char + "!\nPlease enter '1' to override it!\n");
                                 String input = sc.nextLine();
+                            System.out.println("\u001b[35mYou have already entered a guess into " + encrypted_guess + "!\nif you would like to override it type yes:");
+                            System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
+                            String input = sc.nextLine();
 
                                 if(input.equals("1")){
                                     System.out.println("Overriding!");
@@ -334,6 +370,10 @@ public class Game {
                                 playerGameMapping[i] = letter + " ";
                             }
                             letter = Character.toLowerCase(letter);
+
+                            else{
+                                System.out.println("\u001b[35mPlease make another guess!\u001b[0m");
+                            }
                         }
 
                         letter = Character.toLowerCase(letter);
@@ -347,13 +387,12 @@ public class Game {
                         }
                         //Check if user has successfully completed cryptogram
                         if(isFull){
-                            int x = 0;
-                            for(String str : playerGameMapping){
-                                if (str.charAt(x) != cryptogram.getPhrase().charAt(x)) {
+                            for(int x = 0; x < playerGameMapping.length; x++){
+                                if (playerGameMapping[x].charAt(0) != cryptogram.getPhrase().charAt(x)) {
                                     return "Incorrect";
                                 }
-                                return "Correct";
                             }
+                            return "Correct";
                         }
 
                     }
