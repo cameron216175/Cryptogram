@@ -1,7 +1,14 @@
 package src.main.java;
-import java.util.Scanner;
 
-public class Game {
+import java.io.*;
+import java.util.Scanner;
+import java.io.Serializable;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
+
+public class Game implements Serializable {
     private String[] playerGameMapping;
     private String crypto_type = "";
     private String[] guessHistory;
@@ -70,44 +77,48 @@ public class Game {
                     System.out.println("\n\u001b[35mWhat would you like to do? (enter 'help' to see a list of commands!)");
                     System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
 
-                    input = sc.nextLine();
+            input = sc.nextLine();
+            String[] inputs = input.split(" ");
 
-                    switch (input) {
-                        case "undo" -> {
-                            System.out.println("\n\u001b[35mEnter the encrypted letter/number you want to undo:\u001b[0m");
-                            System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
-                            String undoLetter = sc.nextLine() + " ";
-                            //Continue if empty string was entered
-                            if (undoLetter.substring(0, undoLetter.length() - 1).isEmpty()) {
-                                continue;
-                            }
+            switch (inputs[0]) {
+                case "undo" -> {
+                    if(inputs.length > 2){
+                        System.out.println ("Too many arguments!");
+                        continue;
+                    }
+                    else if(inputs.length < 2){
+                        System.out.println ("Too few arguments!");
+                        continue;
+                    }
 
-                            game.undoLetter(cryptogram, undoLetter);
-                        }
-                        case "exit" -> {
-                            System.out.println("\u001b[35mExiting Game...\u001b[0m");
-                            exit = true;
-                        }
-                        case "help" -> help();
-                        case "enter" -> {
-
-                            if (game.getCryptoType().equals("letters")) {
-                                System.out.println("\n\u001b[35mEnter the letter you want to guess and the encrypted letter you want to map it to: (e.g. c s)");
-                            } else {
-                                System.out.println("\n\u001b[35mEnter the letter you want to guess and the encrypted number you want to map it to: (e.g. c 17)");
-                            }
-
-                            input = sc.nextLine();
-
-                            //Continue if empty string entered
-                            if (input.isEmpty()) {
-                                continue;
-                            }
-
-                            //Take letter from the front of the string
-                            char letter = input.charAt(0);
-                            //Take encrypted guess from the rest of the string
-                            String encrypted_guess = input.substring(1);
+                    String undoLetter = inputs[1] + " ";
+                    game.undoLetter(cryptogram, undoLetter);
+                }
+                case "save" -> {
+                    game.saveGame(cryptogram);
+                }
+                case "load" -> {
+                    cryptogram = game.loadGame();
+                    printCryptogram(cryptogram, game);
+                }
+                case "exit" -> {
+                    System.out.println("\u001b[35mExiting Game...\u001b[0m");
+                    exit = true;
+                }
+                case "help" -> help();
+                case "enter" -> {
+                    if(inputs.length > 3){
+                        System.out.println ("Too many arguments!");
+                        continue;
+                    }
+                    else if(inputs.length < 3){
+                        System.out.println ("Too few arguments!");
+                        continue;
+                    }
+                    //Take letter from the front of the string
+                    char letter = inputs[1].charAt(0);
+                    //Take encrypted guess from the rest of the string
+                    String encrypted_guess = inputs[2];
 
                             //Call enterLetter method
                             String completion = game.enterLetter(cryptogram, letter, encrypted_guess);
@@ -482,9 +493,60 @@ public class Game {
 
     public void viewFrequencies() {}
 
-    public void saveGame() {}
+    //SAVE GAME
+    public void saveGame(Cryptogram cryptogram) {
 
-    public void loadGame() {}
+        try {
+
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("savegame.ser"));
+
+            out.writeObject(this);
+
+            out.writeObject(cryptogram);
+
+            out.close();
+
+            System.out.println("Game saved...");
+
+        } catch (Exception e) {
+
+            System.out.println("Error saving game: " + e.getMessage());
+
+        }
+
+    }
+
+    //LOAD GAME
+    public Cryptogram loadGame() {
+
+        try {
+
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream("savegame.ser"));
+
+            Game loadedGame = (Game) in.readObject();
+
+            Cryptogram cryptogram = (Cryptogram) in.readObject();
+
+            this.playerGameMapping = loadedGame.playerGameMapping;
+            this.guessHistory = loadedGame.guessHistory;
+            this.guessCount = loadedGame.guessCount;
+            this.crypto_type = loadedGame.crypto_type;
+
+            in.close();
+
+            System.out.println("Game loaded...");
+
+            return cryptogram;
+
+        } catch (Exception e) {
+
+            System.out.println("Error loading game: " + e.getMessage());
+
+            return null;
+
+        }
+
+    }
 
     // public void generateCryptogram() {}
 
