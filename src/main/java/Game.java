@@ -54,34 +54,28 @@ public class Game implements Serializable {
             System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
 
             input = sc.nextLine();
+            String[] inputs = input.split(" ");
 
-            switch (input) {
+            switch (inputs[0]) {
                 case "undo" -> {
-                    System.out.println("\n\u001b[35mEnter the encrypted letter/number you want to undo:\u001b[0m");
-                    System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
-                    String undoLetter = sc.nextLine() + " ";
-                    //Continue if empty string was entered
-                    if(undoLetter.substring(0, undoLetter.length()-1).isEmpty()){
+                    if(inputs.length > 2){
+                        System.out.println ("Too many arguments!");
+                        continue;
+                    }
+                    else if(inputs.length < 2){
+                        System.out.println ("Too few arguments!");
                         continue;
                     }
 
+                    String undoLetter = inputs[1] + " ";
                     game.undoLetter(cryptogram, undoLetter);
                 }
                 case "save" -> {
-
                     game.saveGame(cryptogram);
-
-                    continue;
-
                 }
                 case "load" -> {
-
                     cryptogram = game.loadGame();
-
                     printCryptogram(cryptogram, game);
-
-                    continue;
-
                 }
                 case "exit" -> {
                     System.out.println("\u001b[35mExiting Game...\u001b[0m");
@@ -89,24 +83,18 @@ public class Game implements Serializable {
                 }
                 case "help" -> help();
                 case "enter" -> {
-
-                    if (game.getCryptoType().equals("letters")) {
-                        System.out.println("\n\u001b[35mEnter the letter you want to guess and the encrypted letter you want to map it to: (e.g. c s)");
-                    } else {
-                        System.out.println("\n\u001b[35mEnter the letter you want to guess and the encrypted number you want to map it to: (e.g. c 17)");
-                    }
-
-                    input = sc.nextLine();
-
-                    //Continue if empty string entered
-                    if(input.isEmpty()) {
+                    if(inputs.length > 3){
+                        System.out.println ("Too many arguments!");
                         continue;
                     }
-
+                    else if(inputs.length < 3){
+                        System.out.println ("Too few arguments!");
+                        continue;
+                    }
                     //Take letter from the front of the string
-                    char letter = input.charAt(0);
+                    char letter = inputs[1].charAt(0);
                     //Take encrypted guess from the rest of the string
-                    String encrypted_guess = input.substring(1);
+                    String encrypted_guess = inputs[2];
 
                     //Call enterLetter method
                     String completion = game.enterLetter(cryptogram, letter, encrypted_guess);
