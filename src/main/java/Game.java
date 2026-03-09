@@ -26,7 +26,10 @@ public class Game {
             if (menu.equals("quit")) {
                 running = false;
             } else if (menu.equals("stats")) {
-
+                printStats(player);
+                System.out.println("\u001b[35mto quit type anything");
+                System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
+                String stats = sc.nextLine();
             } else if (menu.equals("load")) {
 
             } else if (menu.equals("new")) {
@@ -146,6 +149,15 @@ public class Game {
     }
 
     public void playGame() {}
+
+    public static void printStats(Player p) {
+        printLineBreak("Statistics");
+        System.out.println("\u001b[34m ◈ Player name: \u001b[35m"+p.getUsername());
+        System.out.println("\u001b[34m ◈ Total guesses made: \u001b[35m"+p.getTotalGuesses());
+        System.out.println("\u001b[34m ◈ Total cryptograms completed: \u001b[35m"+p.getNumCryptogramsCompleted());
+        System.out.println("\u001b[34m ◈ Total cryptograms played: \u001b[35m"+p.getNumCryptogramsPlayed());
+        printLineBreak("bottom");
+    }
 
     public static void printLogin() {
         System.out.println("\u001b[38;5;214m╭──────────────────────────────────────────╮\u001b[0m");
