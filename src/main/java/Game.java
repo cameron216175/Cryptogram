@@ -41,19 +41,11 @@ public class Game implements Serializable {
                 System.out.println("\u001b[35mto quit type anything");
                 System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
                 String stats = sc.nextLine();
-            }else if (menu.equals("new")) {
-
-                // Cryptogram game loop
+            } else if (menu.equals("new")) {
                 printTitle();
                 System.out.println("\u001b[35mEnter 0 for numbers and 1 for letters cryptogram:");
                 System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
                 String input = sc.nextLine();
-
-
-
-
-
-
                 Cryptogram cryptogram = game.generateCryptogram(input);
 
                 game.guessHistory = new String[cryptogram.getEncryptedPhrase().length];
@@ -68,75 +60,10 @@ public class Game implements Serializable {
                     }
                 }
 
-
-
-                boolean exit = false;
-
-                //Loop until player completes game
-                while(!exit) {
-
-                    System.out.print("\n");
-                    printCryptogram(cryptogram, game);
-
-                    System.out.println("\n\u001b[35mWhat would you like to do? (enter 'help' to see a list of commands!)");
-                    System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
-
-                    input = sc.nextLine();
-                    String[] inputs = input.split(" ");
-
-                    switch (inputs[0]) {
-                        case "undo" -> {
-                            if (inputs.length > 2) {
-                                System.out.println("Too many arguments!");
-                                continue;
-                            } else if (inputs.length < 2) {
-                                System.out.println("Too few arguments!");
-                                continue;
-                            }
-
-                            String undoLetter = inputs[1] + " ";
-                            game.undoLetter(cryptogram, undoLetter);
-                        }
-                        case "save" -> {
-                            game.saveGame(cryptogram);
-                        }
-                        case "load" -> {
-                            cryptogram = game.loadGame();
-                            printCryptogram(cryptogram, game);
-                        }
-                        case "exit" -> {
-                            System.out.println("\u001b[35mExiting Game...\u001b[0m");
-                            exit = true;
-                        }
-                        case "help" -> help();
-                        case "enter" -> {
-                            if (inputs.length > 3) {
-                                System.out.println("Too many arguments!");
-                                continue;
-                            } else if (inputs.length < 3) {
-                                System.out.println("Too few arguments!");
-                                continue;
-                            }
-                            //Take letter from the front of the string
-                            char letter = inputs[1].charAt(0);
-                            //Take encrypted guess from the rest of the string
-                            String encrypted_guess = inputs[2];
-                            //Call enterLetter method
-                            String completion = game.enterLetter(cryptogram, letter, encrypted_guess);
-                            if (completion.equals("Complete")) {
-                                printLineBreak(" ");
-                                printCompleted();
-                                exit = true;
-                            }
-                            System.out.print("\n");
-
-                        }
-                        default -> {
-                            System.out.println("Invalid input!");
-                            continue;
-                        }
-                    }
-                }
+                playGame(cryptogram, game, sc);
+            } else if (menu.equals("load")) {
+                Cryptogram cryptogram = game.loadGame();
+                playGame(cryptogram, game, sc);
             }
         }
     }
@@ -165,7 +92,77 @@ public class Game implements Serializable {
         return players.getPlayer(player.getUsername());
     }
 
-    public void playGame() {}
+    public static void playGame( Cryptogram cryptogram, Game game, Scanner sc) {
+        // Cryptogram game loop
+
+        boolean exit = false;
+
+        //Loop until player completes game
+        while(!exit) {
+
+            System.out.print("\n");
+            printCryptogram(cryptogram, game);
+
+            System.out.println("\n\u001b[35mWhat would you like to do? (enter 'help' to see a list of commands!)");
+            System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
+
+            String input = sc.nextLine();
+            String[] inputs = input.split(" ");
+
+            switch (inputs[0]) {
+                case "undo" -> {
+                    if (inputs.length > 2) {
+                        System.out.println("Too many arguments!");
+                        continue;
+                    } else if (inputs.length < 2) {
+                        System.out.println("Too few arguments!");
+                        continue;
+                    }
+
+                    String undoLetter = inputs[1] + " ";
+                    game.undoLetter(cryptogram, undoLetter);
+                }
+                case "save" -> {
+                    game.saveGame(cryptogram);
+                }
+                case "load" -> {
+                    cryptogram = game.loadGame();
+                    printCryptogram(cryptogram, game);
+                }
+                case "exit" -> {
+                    System.out.println("\u001b[35mExiting Game...\u001b[0m");
+                    exit = true;
+                }
+                case "help" -> help();
+                case "enter" -> {
+                    if (inputs.length > 3) {
+                        System.out.println("Too many arguments!");
+                        continue;
+                    } else if (inputs.length < 3) {
+                        System.out.println("Too few arguments!");
+                        continue;
+                    }
+                    //Take letter from the front of the string
+                    char letter = inputs[1].charAt(0);
+                    //Take encrypted guess from the rest of the string
+                    String encrypted_guess = inputs[2];
+                    //Call enterLetter method
+                    String completion = game.enterLetter(cryptogram, letter, encrypted_guess);
+                    if (completion.equals("Complete")) {
+                        printLineBreak(" ");
+                        printCompleted();
+                        exit = true;
+                    }
+                    System.out.print("\n");
+
+                }
+                default -> {
+                    System.out.println("Invalid input!");
+                    continue;
+                }
+            }
+        }
+    }
 
     public static void printStats(Player p) {
         printLineBreak("Statistics");
@@ -509,13 +506,9 @@ public class Game implements Serializable {
         try {
 
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("savegame.ser"));
-
             out.writeObject(this);
-
             out.writeObject(cryptogram);
-
             out.close();
-
             System.out.println("Game saved...");
 
         } catch (Exception e) {
