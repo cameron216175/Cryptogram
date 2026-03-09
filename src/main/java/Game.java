@@ -25,6 +25,7 @@ public class Game {
 
             if (menu.equals("quit")) {
                 running = false;
+                System.out.println("\u001b[35mClosing Game!!!");
             } else if (menu.equals("stats")) {
                 printStats(player);
                 System.out.println("\u001b[35mto quit type anything");
