@@ -1,7 +1,14 @@
 package src.main.java;
-import java.util.Scanner;
 
-public class Game {
+import java.io.*;
+import java.util.Scanner;
+import java.io.Serializable;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
+
+public class Game implements Serializable {
     private String[] playerGameMapping;
     private String crypto_type = "";
     private String[] guessHistory;
@@ -59,6 +66,22 @@ public class Game {
                     }
 
                     game.undoLetter(cryptogram, undoLetter);
+                }
+                case "save" -> {
+
+                    game.saveGame(cryptogram);
+
+                    continue;
+
+                }
+                case "load" -> {
+
+                    cryptogram = game.loadGame();
+
+                    printCryptogram(cryptogram, game);
+
+                    continue;
+
                 }
                 case "exit" -> {
                     System.out.println("\u001b[35mExiting Game...\u001b[0m");
@@ -405,9 +428,60 @@ public class Game {
 
     public void viewFrequencies() {}
 
-    public void saveGame() {}
+    //SAVE GAME
+    public void saveGame(Cryptogram cryptogram) {
 
-    public void loadGame() {}
+        try {
+
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("savegame.ser"));
+
+            out.writeObject(this);
+
+            out.writeObject(cryptogram);
+
+            out.close();
+
+            System.out.println("Game saved...");
+
+        } catch (Exception e) {
+
+            System.out.println("Error saving game: " + e.getMessage());
+
+        }
+
+    }
+
+    //LOAD GAME
+    public Cryptogram loadGame() {
+
+        try {
+
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream("savegame.ser"));
+
+            Game loadedGame = (Game) in.readObject();
+
+            Cryptogram cryptogram = (Cryptogram) in.readObject();
+
+            this.playerGameMapping = loadedGame.playerGameMapping;
+            this.guessHistory = loadedGame.guessHistory;
+            this.guessCount = loadedGame.guessCount;
+            this.crypto_type = loadedGame.crypto_type;
+
+            in.close();
+
+            System.out.println("Game loaded...");
+
+            return cryptogram;
+
+        } catch (Exception e) {
+
+            System.out.println("Error loading game: " + e.getMessage());
+
+            return null;
+
+        }
+
+    }
 
     // public void generateCryptogram() {}
 
