@@ -123,8 +123,17 @@ public class Game implements Serializable {
                             String encrypted_guess = inputs[2];
                             //Call enterLetter method
                             String completion = game.enterLetter(cryptogram, letter, encrypted_guess);
+                            if (completion.equals("Complete")) {
+                                printLineBreak(" ");
+                                printCompleted();
+                                exit = true;
+                            }
                             System.out.print("\n");
 
+                        }
+                        default -> {
+                            System.out.println("Invalid input!");
+                            continue;
                         }
                     }
                 }
@@ -230,7 +239,7 @@ public class Game implements Serializable {
         System.out.println("\n\u001b[38;5;214m╠═════════════════════════════════════╡ "+ name +" ╞═════════════════════════════════════╣\u001b[0m");
     }
 
-   public static void printCryptogram(Cryptogram cryptogram, Game game) {
+    public static void printCryptogram(Cryptogram cryptogram, Game game) {
        String[] encrypted = cryptogram.getEncryptedPhrase();
 
        printLineBreak("Cryptogram");
@@ -463,7 +472,7 @@ public class Game implements Serializable {
         }
         boolean found = false;
         for (int i = 0; i < guessCount; i++) {
-            if (guessHistory[i].equals(undoLetter)) {
+            if (guessHistory[i].equals(undoLetter) || guessHistory[i].equals(undoLetter.toUpperCase())) {
                 found = true;
                 for (int j = i; j < guessCount; j++) {
                     guessHistory[j] = guessHistory[j + 1];
