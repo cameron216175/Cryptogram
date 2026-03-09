@@ -87,15 +87,9 @@ public class Players {
     }
 
     public Player getPlayer(String playerName) {
-<<<<<<< HEAD
         for (Player player : allPlayers) {
             if (player.getUsername().equals(playerName)) {
                 return player;
-=======
-        for (Player Player : allPlayers) {
-            if (Player.getUsername().equals(playerName)) {
-                return Player;
->>>>>>> Login-Logic
             }
         }
         return null;
