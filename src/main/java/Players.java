@@ -5,132 +5,113 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.nio.file.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 
 public class Players {
-    private Object allPlayers;
-    private Object playersFile;
+    private ArrayList<Player> allPlayers = new ArrayList<Player>();
+    private String playersFile;
+
+    public Players() {
+        readPlayers();
+    }
 
     public boolean addPlayer(Player p) {
-        if (findPlayer(p) == null) {
-            try {
+        if (findPlayer(p) != null) {
+            System.out.println("Player already exists!");
+            return false;
+        }
+        allPlayers.add(p);
+        return true;
+    }
 
-                FileWriter playerWriter = new FileWriter("./playerData.csv");
-                playerWriter
-                        .append(p.getUsername())
-                        .append(",").append(String.valueOf(p.getTotalGuesses()))
-                        .append(",").append(String.valueOf(p.getNumCryptogramsCompleted()))
-                        .append(",").append(String.valueOf(p.getNumCryptogramsPlayed()))
-                        .append(",").append(String.valueOf(p.getAccuracy()));
-                playerWriter.close();
-                return true;
-            } catch (IOException e) {
-                System.out.println("An error has occured.");
-                e.printStackTrace();
+    public boolean savePlayers(Player p) throws IOException {
+        try {
+            FileWriter myWriter = new FileWriter("src/playerData.csv");
+            for (Player player : allPlayers) {
+                myWriter.write(
+                        player.getUsername() + "," +
+                                player.getTotalGuesses() + "," +
+                                player.getNumCryptogramsPlayed() + "," +
+                                player.getNumCryptogramsCompleted() + "," +
+                                player.getAccuracy() + "\n");
             }
+            myWriter.close();  // must close manually
+            System.out.println("Successfully wrote to the file.");
+            return true;
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    public boolean removePlayer(Player p) {
+        if (findPlayer(p) != null) {
+            for(int x = 0; x < allPlayers.size(); x++) {
+                if (allPlayers.get(x).getUsername().equals(p.getUsername())) {
+                    allPlayers.remove(x);
+                }
+            }
+            return findPlayer(p) == null;
         }
         return false;
     }
 
-    public boolean savePlayers(Player p) throws IOException {
-        Path path = Paths.get("./playerData.csv");
-        List<String> lines = Files.readAllLines(path);
-        AtomicBoolean found = new AtomicBoolean(false);
-        List<String> updatedLine = lines.stream()
-                .map(line ->
-                {
-                    if (line.startsWith(p.getUsername() + ",")) {
-                        found.set(true);
-                        return p.getUsername() + "," +
-                                String.valueOf(p.getTotalGuesses()) + "," +
-                                String.valueOf(p.getNumCryptogramsCompleted()) + "," +
-                                String.valueOf(p.getNumCryptogramsPlayed()) + "," +
-                                String.valueOf(p.getAccuracy());
-                    }
-                    return line;
-                })
-                .collect(Collectors.toList());
-
-        Files.write(path, updatedLine);
-        return found.get();
-    }
     public String findPlayer(Player p) {
-        File players = new File("./playerData.csv");
-
-        try (Scanner reader = new Scanner(players)) {
-            while (reader.hasNextLine()) {
-                String player = reader.nextLine();
-                String regex = ",";
-                String[] playerData = player.split(regex);
-                if (playerData[0].equals(p.getUsername())) {
-                    return playerData[0];
-                }
+        for (Player Player : allPlayers) {
+            if (Player.getUsername().equals(p.getUsername())) {
+                return Player.getUsername();
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("An error has occured.");
-            e.printStackTrace();
         }
-
+        ;
         return null;
     }
-    public List<String> getAllPlayersAccuracies() {
-        List<String> stats = new ArrayList<>();
-        File players = new File("./playerData.csv");
+
+    public void readPlayers() {
+        File players = new File("src/playerData.csv");
 
         try (Scanner reader = new Scanner(players)) {
             while (reader.hasNextLine()) {
-                String player = reader.nextLine();
+                String p = reader.nextLine();
                 String regex = ",";
-                String[] playerData = player.split(regex);
-                stats.add(playerData[3]);
+                String[] playerData = p.split(regex);
+                Player player = new Player(playerData[0], Integer.parseInt(playerData[1]), Integer.parseInt(playerData[2]), Integer.parseInt(playerData[3]), Double.parseDouble(playerData[4]));
+                allPlayers.add(player);
             }
         } catch (FileNotFoundException e) {
             System.out.println("An error has occured.");
             e.printStackTrace();
         }
-        return stats;
+
     }
 
-    public List<String> getAllPlayersCryptogramsPlayed() {
-        List<String> stats = new ArrayList<>();
-        File players = new File("./playerData.csv");
-
-        try (Scanner reader = new Scanner(players)) {
-
-            while (reader.hasNextLine()) {
-                String player = reader.nextLine();
-                String regex = ",";
-                String[] playerData = player.split(regex);
-                stats.add(playerData[3]);
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("An error has occured.");
-            e.printStackTrace();
-        }
-        return stats;
-    }
-    public List<String> getAllPlayersCompletedCryptos() {
-        List<String> stats = new ArrayList<>();
-        File players = new File("./playerData.csv");
-
-        try (Scanner reader = new Scanner(players)) {
-            while (reader.hasNextLine()) {
-                String player = reader.nextLine();
-                String regex = ",";
-                String[] playerData = player.split(regex);
-                stats.add(playerData[2]);
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("An error has occured.");
-            e.printStackTrace();
+    public List<Double> getAllPlayersAccuracies() {
+        List<Double> stats = new ArrayList<>();
+        for (Player Player : allPlayers) {
+            stats.add(Player.getAccuracy());
         }
         return stats;
     }
 
-    public void clearPlayers() throws FileNotFoundException {
-        PrintWriter writer = new PrintWriter("./playerData.csv");
+    public List<Integer> getAllPlayersCryptogramsPlayed() {
+        List<Integer> stats = new ArrayList<>();
+        for (Player Player : allPlayers) {
+            stats.add(Player.getNumCryptogramsPlayed());
+        }
+        return stats;
+    }
+
+    public List<Integer> getAllPlayersCompletedCryptos() {
+        List<Integer> stats = new ArrayList<>();
+        for (Player Player : allPlayers) {
+            stats.add(Player.getNumCryptogramsCompleted());
+        }
+        return stats;
+    }
+
+    public void clearFile() throws FileNotFoundException {
+        PrintWriter writer = new PrintWriter("src/playerData.csv");
         writer.print("");
         writer.close();
     }

@@ -15,6 +15,14 @@ public class Player {
 		accuracy = 0.0;
 	}
 
+	public Player(String username, int totalGuesses, int cryptogramsCompleted, int cryptogramsPlayed, double accuracy) {
+		this.username = username;
+		this.totalGuesses = totalGuesses;
+		this.cryptogramsCompleted = cryptogramsCompleted;
+		this.cryptogramsPlayed = cryptogramsPlayed;
+		this.accuracy = accuracy;
+	}
+
 	// SETTERS
 
 	public void updateAccuracy() {}

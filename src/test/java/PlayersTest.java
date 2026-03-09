@@ -1,5 +1,6 @@
 package src.test.java;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import src.main.java.Player;
@@ -7,10 +8,8 @@ import src.main.java.Players;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 class PlayersTest {
     private Player player;
@@ -18,23 +17,51 @@ class PlayersTest {
 
     @BeforeEach
     void setUp() throws FileNotFoundException {
-        player = new Player("john doe");
+        player = new Player("conor");
         players = new Players();
-        players.clearPlayers();
     }
 
     @Test
     void testAddPlayers() {
-        assertEquals(true, players.addPlayer(player));
-        assertEquals(false, players.addPlayer(player));
+        players.removePlayer(player);
+        Assertions.assertTrue(players.addPlayer(player));
+        Assertions.assertFalse(players.addPlayer(player));
     }
 
     @Test
     void testSavePlayers() throws IOException {
+        players.removePlayer(player);
         for (int i = 0; i < 20; i++) {
             player.incrementCryptogramsCompleted();
         }
         players.addPlayer(player);
-        assertTrue(players.savePlayers(player));
+        Assertions.assertTrue(players.savePlayers(player));
+    }
+
+    @Test
+    void testGetAllPlayersAccuracies() {
+        Player player2 = new Player("test", 3, 3, 4, 5.5489);
+        players.removePlayer(player2);
+        players.addPlayer(player2);
+        Assertions.assertEquals(5.5489, players.getAllPlayersAccuracies().getLast());
+
+    }
+
+    @Test
+    void testGetAllPlayersCryptogramsPlayed() {
+        Player player2 = new Player("test", 3, 3, 4, 5.5489);
+        players.removePlayer(player2);
+        players.addPlayer(player2);
+        Assertions.assertEquals(4, players.getAllPlayersCryptogramsPlayed().getLast());
+
+    }
+
+    @Test
+    void testGetAllPlayersCompletedCryptos() {
+        Player player2 = new Player("test", 3, 3, 4, 5.5489);
+        players.removePlayer(player2);
+        players.addPlayer(player2);
+        Assertions.assertEquals(3, players.getAllPlayersCompletedCryptos().getLast());
+
     }
 }
