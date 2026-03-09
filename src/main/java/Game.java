@@ -296,14 +296,18 @@ public class Game implements Serializable {
 
     public static void help() {
         printLineBreak("Commands");
-        System.out.println("        \u001b[35m               ╔════════════════════════════════════════╗");
+        System.out.println("        \u001b[35m               ╔═════════════════════════════════════════════════════════╗");
         System.out.print  ("        \u001b[35m╔══════════════╣");
-        System.out.println("\u001b[34m ◈ help - lists commands                \u001b[35m║");
+        System.out.println("\u001b[34m ◈ help - lists commands                                 \u001b[35m║");
         System.out.print  ("        \u001b[35m║  ◈  HELP  ◈  ║");
-        System.out.println("\u001b[34m ◈ exit - quits current cryptogram      \u001b[35m║");
+        System.out.println("\u001b[34m ◈ exit - quits current cryptogram                       \u001b[35m║");
         System.out.print  ("        \u001b[35m╚══════════════╣");
-        System.out.println("\u001b[34m ◈ undo - type encrypted indice to undo \u001b[35m║");
-        System.out.println("        \u001b[35m               ╚════════════════════════════════════════╝");
+        System.out.println("\u001b[34m ◈ undo <a/14> - type undo and the indice                \u001b[35m║");
+        System.out.print  ("        \u001b[35m               ║");
+        System.out.println("\u001b[34m ◈ enter <a> <c/14> - type enter the char and the indice \u001b[35m║");
+        System.out.print  ("        \u001b[35m               ║");
+        System.out.println("\u001b[34m ◈ save - saves the current cryptogram                   \u001b[35m║");
+        System.out.println("        \u001b[35m               ╚═════════════════════════════════════════════════════════╝");
         System.out.println("\u001b[0m");
     }
 
