@@ -14,7 +14,7 @@ public class Game implements Serializable {
     private String[] guessHistory;
     private int guessCount = 0;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         Game game = new Game();
         Scanner sc = new Scanner(System.in);
@@ -35,13 +35,16 @@ public class Game implements Serializable {
 
             if (menu.equals("quit")) {
                 running = false;
-                System.out.println("\u001b[35mto quit type anything");
+                System.out.println("\u001b[35mQuiting Game");
+                players.updatePlayer(player);
+                players.savePlayers();
             } else if (menu.equals("stats")) {
                 printStats(player);
                 System.out.println("\u001b[35mto quit type anything");
                 System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
                 String stats = sc.nextLine();
             } else if (menu.equals("new")) {
+                player.incrementCryptogramsPlayed();
                 printTitle();
                 System.out.println("\u001b[35mEnter 0 for numbers and 1 for letters cryptogram:");
                 System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
@@ -60,10 +63,10 @@ public class Game implements Serializable {
                     }
                 }
 
-                playGame(cryptogram, game, sc);
+                playGame(cryptogram, game, sc, player);
             } else if (menu.equals("load")) {
                 Cryptogram cryptogram = game.loadGame();
-                playGame(cryptogram, game, sc);
+                playGame(cryptogram, game, sc, player);
             }
         }
     }
@@ -92,7 +95,7 @@ public class Game implements Serializable {
         return players.getPlayer(player.getUsername());
     }
 
-    public static void playGame( Cryptogram cryptogram, Game game, Scanner sc) {
+    public static void playGame( Cryptogram cryptogram, Game game, Scanner sc, Player player) {
         // Cryptogram game loop
 
         boolean exit = false;
@@ -148,9 +151,10 @@ public class Game implements Serializable {
                     String encrypted_guess = inputs[2];
                     //Call enterLetter method
                     String completion = game.enterLetter(cryptogram, letter, encrypted_guess);
-                    if (completion.equals("Complete")) {
+                    if (completion.equals("Correct")) {
                         printLineBreak(" ");
                         printCompleted();
+                        player.incrementCryptogramsCompleted();
                         exit = true;
                     }
                     System.out.print("\n");

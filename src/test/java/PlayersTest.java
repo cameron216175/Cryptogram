@@ -35,7 +35,7 @@ class PlayersTest {
             player.incrementCryptogramsCompleted();
         }
         players.addPlayer(player);
-        Assertions.assertTrue(players.savePlayers(player));
+        Assertions.assertTrue(players.savePlayers());
     }
 
     @Test

@@ -24,7 +24,7 @@ public class Players {
         return true;
     }
 
-    public boolean savePlayers(Player p) throws IOException {
+    public boolean savePlayers() throws IOException {
         try {
             FileWriter myWriter = new FileWriter("src/playerData.csv");
             for (Player player : allPlayers) {
@@ -63,9 +63,20 @@ public class Players {
             if (Player.getUsername().equals(p.getUsername())) {
                 return Player.getUsername();
             }
-        }
-        ;
+        };
         return null;
+    }
+
+    public boolean updatePlayer(Player p) {
+        if (findPlayer(p) != null) {
+            for(int x = 0; x < allPlayers.size(); x++) {
+                if (allPlayers.get(x).getUsername().equals(p.getUsername())) {
+                    allPlayers.set(x, p);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void readPlayers() {
