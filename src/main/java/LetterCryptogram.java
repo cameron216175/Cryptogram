@@ -1,8 +1,9 @@
 package src.main.java;
 
 import java.util.Random;
+import java.io.Serializable;
 
-public class LetterCryptogram extends Cryptogram {
+public class LetterCryptogram extends Cryptogram implements Serializable {
 
     protected char[] encrypted_values = new char[26];
 
