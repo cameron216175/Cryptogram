@@ -5,8 +5,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.io.Serializable;
 
-public class Cryptogram {
+public abstract class Cryptogram implements Serializable {
 
     protected String phrase;
 
