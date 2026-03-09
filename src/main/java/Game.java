@@ -217,7 +217,7 @@ public class Game {
         //Print error and return if player has already guessed the letter
         for (String str : playerGameMapping) {
             if (str.charAt(0) == Character.toLowerCase(letter) || str.charAt(0) == Character.toUpperCase(letter)) {
-                System.out.println("Error, you have already guessed " + letter + " as an answer!");
+                System.out.println("\u001b[31mError, you have already guessed " + letter + " as an answer!");
                 return "Error";
             }
         }
@@ -256,7 +256,7 @@ public class Game {
         //Print error and return if player has already guessed the letter
         for (String str : playerGameMapping) {
             if (str.charAt(0) == Character.toLowerCase(letter) || str.charAt(0) == Character.toUpperCase(letter)) {
-                System.out.println("Error, you have already guessed " + letter + " as an answer!");
+                System.out.println("\u001b[31mError, you have already guessed " + letter + " as an answer!");
                 return "Error";
             }
         }
@@ -337,7 +337,7 @@ public class Game {
             }
             //Print error if encrypted char was not in the encrypted phrase
             if(!found) {
-                System.out.println("Error, " + encrypted_char + " was not found within the cryptogram!\n");
+                System.out.println("\u001b[31mError, " + encrypted_char + " was not found within the cryptogram!");
                 return "Error";
             }
         }
@@ -387,7 +387,7 @@ public class Game {
             }
             //Print error if the encrypted number was not found in the encrypted phrase
             if(!found) {
-                System.out.println("Error, " + encrypted_guess.substring(0, encrypted_guess.length()-1) + " was not found within the cryptogram!\n");
+                System.out.println("\u001b[31mError, " + encrypted_guess.substring(0, encrypted_guess.length()-1) + " was not found within the cryptogram!");
                 return "Error";
             }
         }
@@ -403,11 +403,16 @@ public class Game {
         if(isFull){
             int x = 0;
             for(String str : playerGameMapping){
-                if (str.charAt(x) != cryptogram.getPhrase().charAt(x)) {
+                if(str.charAt(0) == ' '){
+                    x++;
+                    continue;
+                }
+                if(Character.toLowerCase(str.charAt(0)) != Character.toLowerCase(cryptogram.getPhrase().charAt(x))){
                     return "Incorrect";
                 }
-                return "Correct";
+                x++;
             }
+            return "Correct";
         }
 
         return "Incomplete";
