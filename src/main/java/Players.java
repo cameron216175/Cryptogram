@@ -86,6 +86,15 @@ public class Players {
 
     }
 
+    public Player getPlayer(String playerName) {
+        for (Player Player : allPlayers) {
+            if (Player.getUsername().equals(playerName)) {
+                return Player;
+            }
+        }
+        return null;
+    }
+
     public List<Double> getAllPlayersAccuracies() {
         List<Double> stats = new ArrayList<>();
         for (Player Player : allPlayers) {

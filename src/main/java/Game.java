@@ -10,96 +10,114 @@ public class Game {
     public static void main(String[] args) {
 
         Game game = new Game();
-
-        printTitle();
-
         Scanner sc = new Scanner(System.in);
+        Players players = new Players();
+        printLogin();
+        Player player = loadPlayer(players);
+        boolean running = true;
 
-        System.out.println("\u001b[35mEnter 0 for numbers and 1 for letters cryptogram:");
-        System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
-        String input = sc.nextLine();
+        while (running) {
 
-        Cryptogram cryptogram = game.generateCryptogram(input);
-
-        game.guessHistory = new String[cryptogram.getEncryptedPhrase().length];
-
-        game.playerGameMapping = new String[cryptogram.phrase.length()];
-
-        game.playerGameMapping = cryptogram.getEncryptedPhrase().clone();
-        for(int i = 0; i < game.playerGameMapping.length; i++) {
-
-            if(game.playerGameMapping[i].charAt(0) != ' '){
-                game.playerGameMapping[i] = "- ";
-            }
-        }
-
-
-
-        boolean exit = false;
-
-        //Loop until player completes game
-        while(!exit) {
-
-            System.out.print("\n");
-            printCryptogram(cryptogram, game);
-
-            System.out.println("\n\u001b[35mWhat would you like to do? (enter 'help' to see a list of commands!)");
+            printMenu();
+            System.out.println("\u001b[35mType Here: ");
             System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
+            String menu = sc.nextLine();
 
-            input = sc.nextLine();
+            if (menu.equals("quit")) {
+                running = false;
+            } else if (menu.equals("stats")) {
 
-            switch (input) {
-                case "undo" -> {
-                    System.out.println("\n\u001b[35mEnter the encrypted letter/number you want to undo:\u001b[0m");
+            } else if (menu.equals("load")) {
+
+            } else if (menu.equals("new")) {
+                printTitle();
+                System.out.println("\u001b[35mEnter 0 for numbers and 1 for letters cryptogram:");
+                System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
+                String input = sc.nextLine();
+
+                Cryptogram cryptogram = game.generateCryptogram(input);
+
+                game.guessHistory = new String[cryptogram.getEncryptedPhrase().length];
+
+                game.playerGameMapping = new String[cryptogram.phrase.length()];
+
+                game.playerGameMapping = cryptogram.getEncryptedPhrase().clone();
+                for(int i = 0; i < game.playerGameMapping.length; i++) {
+
+                    if(game.playerGameMapping[i].charAt(0) != ' '){
+                        game.playerGameMapping[i] = "- ";
+                    }
+                }
+
+
+
+                boolean exit = false;
+
+                //Loop until player completes game
+                while(!exit) {
+
+                    System.out.print("\n");
+                    printCryptogram(cryptogram, game);
+
+                    System.out.println("\n\u001b[35mWhat would you like to do? (enter 'help' to see a list of commands!)");
                     System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
-                    String undoLetter = sc.nextLine() + " ";
-                    //Continue if empty string was entered
-                    if(undoLetter.substring(0, undoLetter.length()-1).isEmpty()){
-                        continue;
-                    }
-
-                    game.undoLetter(cryptogram, undoLetter);
-                }
-                case "exit" -> {
-                    System.out.println("\u001b[35mExiting Game...\u001b[0m");
-                    exit = true;
-                }
-                case "help" -> help();
-                case "enter" -> {
-
-                    if (game.getCryptoType().equals("letters")) {
-                        System.out.println("\n\u001b[35mEnter the letter you want to guess and the encrypted letter you want to map it to: (e.g. c s)");
-                    } else {
-                        System.out.println("\n\u001b[35mEnter the letter you want to guess and the encrypted number you want to map it to: (e.g. c 17)");
-                    }
 
                     input = sc.nextLine();
 
-                    //Continue if empty string entered
-                    if(input.isEmpty()) {
-                        continue;
-                    }
+                    switch (input) {
+                        case "undo" -> {
+                            System.out.println("\n\u001b[35mEnter the encrypted letter/number you want to undo:\u001b[0m");
+                            System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
+                            String undoLetter = sc.nextLine() + " ";
+                            //Continue if empty string was entered
+                            if(undoLetter.substring(0, undoLetter.length()-1).isEmpty()){
+                                continue;
+                            }
 
-                    //Take letter from the front of the string
-                    char letter = input.charAt(0);
-                    //Take encrypted guess from the rest of the string
-                    String encrypted_guess = input.substring(1);
+                            game.undoLetter(cryptogram, undoLetter);
+                        }
+                        case "exit" -> {
+                            System.out.println("\u001b[35mExiting Game...\u001b[0m");
+                            exit = true;
+                        }
+                        case "help" -> help();
+                        case "enter" -> {
 
-                    //Call enterLetter method
-                    String completion = game.enterLetter(cryptogram, letter, encrypted_guess);
-                    System.out.print("\n");
+                            if (game.getCryptoType().equals("letters")) {
+                                System.out.println("\n\u001b[35mEnter the letter you want to guess and the encrypted letter you want to map it to: (e.g. c s)");
+                            } else {
+                                System.out.println("\n\u001b[35mEnter the letter you want to guess and the encrypted number you want to map it to: (e.g. c 17)");
+                            }
 
-                    //Check if player completed cryptogram
-                    if (completion.equals("Correct")) {
-                        printCompleted();
-                        exit = true;
-                        //Update player stats here
-                    } else if (completion.equals("Incorrect")) {
-                        System.out.print("\n\u001b[31mYou have incorrectly completed the cryptogram!\n");
-                        //Update player stats here
+                            input = sc.nextLine();
+
+                            //Continue if empty string entered
+                            if(input.isEmpty()) {
+                                continue;
+                            }
+
+                            //Take letter from the front of the string
+                            char letter = input.charAt(0);
+                            //Take encrypted guess from the rest of the string
+                            String encrypted_guess = input.substring(1);
+
+                            //Call enterLetter method
+                            String completion = game.enterLetter(cryptogram, letter, encrypted_guess);
+                            System.out.print("\n");
+
+                            //Check if player completed cryptogram
+                            if (completion.equals("Correct")) {
+                                printCompleted();
+                                exit = true;
+                                //Update player stats here
+                            } else if (completion.equals("Incorrect")) {
+                                System.out.print("\n\u001b[31mYou have incorrectly completed the cryptogram!\n");
+                                //Update player stats here
+                            }
+                        }
+                        default -> {System.out.println("Invalid input!");}
                     }
                 }
-                default -> {System.out.println("Invalid input!");}
             }
         }
     }
@@ -112,9 +130,57 @@ public class Game {
 
     public void getHint () {}
 
-    public void loadPlayer() {}
+    public static Player loadPlayer(Players players) {
+        Scanner sc = new Scanner(System.in);
+        printLineBreak("Please enter your usename");
+        System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
+        String input = sc.nextLine();
+        Player player = new Player(input);
+        if (players.findPlayer(player) == null) {
+            players.addPlayer(player);
+            System.out.print("\u001b[35mUser not found creating account\u001b[0m\n");
+            return player;
+        }
+        System.out.print("\u001b[35mUser found creating account\u001b[0m\n");
+        return players.getPlayer(player.getUsername());
+    }
 
     public void playGame() {}
+
+    public static void printLogin() {
+        System.out.println("\u001b[38;5;214m╭──────────────────────────────────────────╮\u001b[0m");
+        System.out.println("\u001b[34m   ██╗      ██████╗  ██████╗ ██╗███╗   ██╗");
+        System.out.println("   ██║     ██╔═══██╗██╔════╝ ██║████╗  ██║");
+        System.out.println("   ██║     ██║   ██║██║  ███╗██║██╔██╗ ██║");
+        System.out.println("   ██║     ██║   ██║██║   ██║██║██║╚██╗██║");
+        System.out.println("   ███████╗╚██████╔╝╚██████╔╝██║██║ ╚████║");
+        System.out.println("   ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝");
+        System.out.println("\u001b[38;5;214m╰──────────────────────────────────────────╯\u001b[0m");
+    }
+
+    public static void printMenu() {
+        System.out.println("\u001b[38;5;214m╭──────────────────────────────────────────╮\u001b[0m");
+        System.out.println("\u001b[34m   ███╗   ███╗███████╗███╗   ██╗██╗   ██╗");
+        System.out.println("   ████╗ ████║██╔════╝████╗  ██║██║   ██║");
+        System.out.println("   ██╔████╔██║█████╗  ██╔██╗ ██║██║   ██║");
+        System.out.println("   ██║╚██╔╝██║██╔══╝  ██║╚██╗██║██║   ██║");
+        System.out.println("   ██║ ╚═╝ ██║███████╗██║ ╚████║╚██████╔╝");
+        System.out.println("   ╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝");
+        System.out.println("\u001b[38;5;214m╰──────────────────────────────────────────╯\u001b[0m");
+
+        printLineBreak("Commands");
+        System.out.println("        \u001b[35m               ╔════════════════════════════════════════╗");
+        System.out.print  ("        \u001b[35m╔══════════════╣");
+        System.out.println("\u001b[34m ◈ new - creates new cryptogram         \u001b[35m║");
+        System.out.print  ("        \u001b[35m║  ◈  HELP  ◈  ║");
+        System.out.println("\u001b[34m ◈ load - loads saved cryptogram        \u001b[35m║");
+        System.out.print  ("        \u001b[35m╚══════════════╣");
+        System.out.println("\u001b[34m ◈ quit - quits game fully              \u001b[35m║");
+        System.out.print  ("        \u001b[35m               ║");
+        System.out.println("\u001b[34m ◈ stats - lists player stats           \u001b[35m║");
+        System.out.println("        \u001b[35m               ╚════════════════════════════════════════╝");
+        System.out.println("\u001b[0m");
+    }
 
     public static void printCompleted() {
         System.out.println("\u001b[38;5;214m ██████╗ ██████╗ ███╗   ███╗██████╗ ██╗     ███████╗████████╗███████╗██████╗ ██╗");
