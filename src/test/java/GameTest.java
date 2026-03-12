@@ -4,10 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import src.main.java.Cryptogram;
-import src.main.java.Game;
-import src.main.java.LetterCryptogram;
-import src.main.java.NumberCryptogram;
+import src.main.java.*;
 
 import java.util.Scanner;
 
@@ -41,7 +38,8 @@ class GameTest {
     @Test
     void testSaveLoad() {
 
-        Game game = new Game();
+        Player p = new Player("test", 1, 1, 1, 0, 1);
+        Game game = new Game(p);
 
         LetterCryptogram lc = new LetterCryptogram();
 
@@ -56,7 +54,8 @@ class GameTest {
     @Test
     void testLoadMatch() {
 
-        Game game = new Game();
+        Player p = new Player("test", 1, 1, 1, 0, 1);
+        Game game = new Game(p);
 
         LetterCryptogram lc = new LetterCryptogram();
 
