@@ -127,7 +127,9 @@ public class Game implements Serializable {
                     String completion = enterLetter(cryptogram, letter, encrypted_guess);
                     if (completion.equals("Correct")) {
                         printLineBreak(" ");
+                        System.out.println();
                         printCompleted();
+                        printLineBreak(" ");
                         player.incrementCryptogramsCompleted();
                         exit = true;
                     }
