@@ -40,7 +40,7 @@ class PlayersTest {
 
     @Test
     void testGetAllPlayersAccuracies() {
-        Player player2 = new Player("test", 3, 3, 4, 5.5489);
+        Player player2 = new Player("test", 3, 3, 4, 5.5489, 4);
         players.removePlayer(player2);
         players.addPlayer(player2);
         Assertions.assertEquals(5.5489, players.getAllPlayersAccuracies().getLast());
@@ -49,7 +49,7 @@ class PlayersTest {
 
     @Test
     void testGetAllPlayersCryptogramsPlayed() {
-        Player player2 = new Player("test", 3, 3, 4, 5.5489);
+        Player player2 = new Player("test", 3, 3, 4, 5.5489, 5);
         players.removePlayer(player2);
         players.addPlayer(player2);
         Assertions.assertEquals(4, players.getAllPlayersCryptogramsPlayed().getLast());
@@ -58,7 +58,7 @@ class PlayersTest {
 
     @Test
     void testGetAllPlayersCompletedCryptos() {
-        Player player2 = new Player("test", 3, 3, 4, 5.5489);
+        Player player2 = new Player("test", 3, 3, 4, 5.5489, 4);
         players.removePlayer(player2);
         players.addPlayer(player2);
         Assertions.assertEquals(3, players.getAllPlayersCompletedCryptos().getLast());

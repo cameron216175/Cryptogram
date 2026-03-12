@@ -33,7 +33,8 @@ public class Players {
                                 player.getTotalGuesses() + "," +
                                 player.getNumCryptogramsPlayed() + "," +
                                 player.getNumCryptogramsCompleted() + "," +
-                                player.getAccuracy() + "\n");
+                                player.getAccuracy() + "," +
+                                player.getCorrectGuesses()+ "\n");
             }
             myWriter.close();  // must close manually
             System.out.println("Successfully wrote to the file.");
@@ -87,7 +88,7 @@ public class Players {
                 String p = reader.nextLine();
                 String regex = ",";
                 String[] playerData = p.split(regex);
-                Player player = new Player(playerData[0], Integer.parseInt(playerData[1]), Integer.parseInt(playerData[2]), Integer.parseInt(playerData[3]), Double.parseDouble(playerData[4]));
+                Player player = new Player(playerData[0], Integer.parseInt(playerData[1]), Integer.parseInt(playerData[2]), Integer.parseInt(playerData[3]), Double.parseDouble(playerData[4]), Integer.parseInt(playerData[5]));
                 allPlayers.add(player);
             }
         } catch (FileNotFoundException e) {

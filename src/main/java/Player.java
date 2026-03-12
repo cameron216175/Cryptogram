@@ -4,6 +4,7 @@ public class Player {
 	private String username;
 	private double accuracy;
 	private int totalGuesses;
+	private int correctGuesses;
 	private int cryptogramsPlayed;
 	private int cryptogramsCompleted;
 
@@ -13,25 +14,31 @@ public class Player {
 		cryptogramsCompleted = 0;
 		cryptogramsPlayed = 0;
 		accuracy = 0.0;
+		correctGuesses = 0;
 	}
 
-	public Player(String username, int totalGuesses, int cryptogramsCompleted, int cryptogramsPlayed, double accuracy) {
+	public Player(String username, int totalGuesses, int cryptogramsCompleted, int cryptogramsPlayed, double accuracy, int correctGuesses) {
 		this.username = username;
 		this.totalGuesses = totalGuesses;
 		this.cryptogramsCompleted = cryptogramsCompleted;
 		this.cryptogramsPlayed = cryptogramsPlayed;
 		this.accuracy = accuracy;
+		this.correctGuesses = correctGuesses;
 	}
 
 	// SETTERS
 
-	public void updateAccuracy() {}
+	public void updateAccuracy() {
+		this.accuracy =  ((double) this.correctGuesses / this.totalGuesses) * 100.0;
+	}
 	public void incrementCryptogramsCompleted() {
         cryptogramsCompleted++;
     }
 	public void incrementCryptogramsPlayed() {
         cryptogramsPlayed++;
     }
+	public void incrementTotalGuesses() {totalGuesses++;}
+	public void incrementCorrectGuesses() {correctGuesses++;}
 
 	// GETTERS
 
@@ -50,8 +57,10 @@ public class Player {
 	public int getNumCryptogramsCompleted() {
         return cryptogramsCompleted;
     }
-    
+
 	public int getNumCryptogramsPlayed() {
         return cryptogramsPlayed;
     }
+
+	public int getCorrectGuesses() { return correctGuesses; }
 }

@@ -1,6 +1,7 @@
 package src.main.java;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.io.Serializable;
 import java.io.FileOutputStream;
@@ -13,68 +14,41 @@ public class Game implements Serializable {
     private String crypto_type = "";
     private String[] guessHistory;
     private int guessCount = 0;
+    private Player player;
 
-    public static void main(String[] args) throws IOException {
 
-        Game game = new Game();
-        Scanner sc = new Scanner(System.in);
+    public Game(Player p, String cryptType) {
+        this.player = p;
+        Cryptogram cryptogram = this.generateCryptogram(cryptType);
+        this.guessHistory = new String[cryptogram.getEncryptedPhrase().length];
 
-        // Handling players login and create account
-        Players players = new Players();
-        printLogin();
-        Player player = loadPlayer(players);
-        boolean running = true;
+        this.playerGameMapping = new String[cryptogram.phrase.length()];
 
-        while (running) {
+        this.playerGameMapping = cryptogram.getEncryptedPhrase().clone();
+        for(int i = 0; i < this.playerGameMapping.length; i++) {
 
-            // Menu for creating cryptograms loading and seeing player stats
-            printMenu();
-            System.out.println("\u001b[35mType Here:");
-            System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
-            String menu = sc.nextLine();
-
-            if (menu.equals("quit")) {
-                running = false;
-                System.out.println("\u001b[35mQuiting Game");
-                players.updatePlayer(player);
-                players.savePlayers();
-            } else if (menu.equals("stats")) {
-                printStats(player);
-                System.out.println("\u001b[35mto quit type anything");
-                System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
-                String stats = sc.nextLine();
-            } else if (menu.equals("new")) {
-                player.incrementCryptogramsPlayed();
-                printTitle();
-                System.out.println("\u001b[35mEnter 0 for numbers and 1 for letters cryptogram:");
-                System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
-                String input = sc.nextLine();
-                Cryptogram cryptogram = game.generateCryptogram(input);
-
-                game.guessHistory = new String[cryptogram.getEncryptedPhrase().length];
-
-                game.playerGameMapping = new String[cryptogram.phrase.length()];
-
-                game.playerGameMapping = cryptogram.getEncryptedPhrase().clone();
-                for(int i = 0; i < game.playerGameMapping.length; i++) {
-
-                    if(game.playerGameMapping[i].charAt(0) != ' '){
-                        game.playerGameMapping[i] = "- ";
-                    }
-                }
-
-                playGame(cryptogram, game, sc, player);
-            } else if (menu.equals("load")) {
-                Cryptogram cryptogram = game.loadGame();
-                playGame(cryptogram, game, sc, player);
+            if(this.playerGameMapping[i].charAt(0) != ' '){
+                this.playerGameMapping[i] = "- ";
             }
         }
+        playGame(cryptogram, p);
     }
 
+    public Game(Player p) {
+        this.player = p;
+        Cryptogram cryptogram = loadGame();
+        this.guessHistory = new String[cryptogram.getEncryptedPhrase().length];
 
-    public void Game(Player p, String cryptType) {}
+        this.playerGameMapping = new String[cryptogram.phrase.length()];
 
-    public void Game(Player p) {
+        this.playerGameMapping = cryptogram.getEncryptedPhrase().clone();
+        for(int i = 0; i < this.playerGameMapping.length; i++) {
+
+            if(this.playerGameMapping[i].charAt(0) != ' '){
+                this.playerGameMapping[i] = "- ";
+            }
+        }
+        playGame(cryptogram, p);
     }
 
     public void getHint () {}
@@ -95,20 +69,20 @@ public class Game implements Serializable {
         return players.getPlayer(player.getUsername());
     }
 
-    public static void playGame( Cryptogram cryptogram, Game game, Scanner sc, Player player) {
+    public void playGame( Cryptogram cryptogram, Player player) {
         // Cryptogram game loop
-
         boolean exit = false;
 
         //Loop until player completes game
         while(!exit) {
 
             System.out.print("\n");
-            printCryptogram(cryptogram, game);
+            printCryptogram(cryptogram);
 
             System.out.println("\n\u001b[35mWhat would you like to do? (enter 'help' to see a list of commands!)");
             System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
 
+            Scanner sc = new Scanner(System.in);
             String input = sc.nextLine();
             String[] inputs = input.split(" ");
 
@@ -123,14 +97,14 @@ public class Game implements Serializable {
                     }
 
                     String undoLetter = inputs[1] + " ";
-                    game.undoLetter(cryptogram, undoLetter);
+                    undoLetter(cryptogram, undoLetter);
                 }
                 case "save" -> {
-                    game.saveGame(cryptogram);
+                    saveGame(cryptogram);
                 }
                 case "load" -> {
-                    cryptogram = game.loadGame();
-                    printCryptogram(cryptogram, game);
+                    cryptogram = loadGame();
+                    printCryptogram(cryptogram);
                 }
                 case "exit" -> {
                     System.out.println("\u001b[35mExiting Game...\u001b[0m");
@@ -150,7 +124,7 @@ public class Game implements Serializable {
                     //Take encrypted guess from the rest of the string
                     String encrypted_guess = inputs[2];
                     //Call enterLetter method
-                    String completion = game.enterLetter(cryptogram, letter, encrypted_guess);
+                    String completion = enterLetter(cryptogram, letter, encrypted_guess);
                     if (completion.equals("Correct")) {
                         printLineBreak(" ");
                         printCompleted();
@@ -168,15 +142,6 @@ public class Game implements Serializable {
         }
     }
 
-    public static void printStats(Player p) {
-        printLineBreak("Statistics");
-        System.out.println("\u001b[34m ◈ Player name: \u001b[35m"+p.getUsername());
-        System.out.println("\u001b[34m ◈ Total guesses made: \u001b[35m"+p.getTotalGuesses());
-        System.out.println("\u001b[34m ◈ Total cryptograms completed: \u001b[35m"+p.getNumCryptogramsCompleted());
-        System.out.println("\u001b[34m ◈ Total cryptograms played: \u001b[35m"+p.getNumCryptogramsPlayed());
-        printLineBreak("bottom");
-    }
-
     public static void printCompleted() {
         System.out.println("\u001b[38;5;214m ██████╗ ██████╗ ███╗   ███╗██████╗ ██╗     ███████╗████████╗███████╗██████╗ ██╗");
         System.out.println("██╔════╝██╔═══██╗████╗ ████║██╔══██╗██║     ██╔════╝╚══██╔══╝██╔════╝██╔══██╗██║");
@@ -186,69 +151,20 @@ public class Game implements Serializable {
         System.out.println(" ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚══════╝╚══════╝   ╚═╝   ╚══════╝╚═════╝ ╚═╝\u001b[0m");
     }
 
-    public static void printLogin() {
-        System.out.println("\u001b[38;5;214m╭──────────────────────────────────────────╮");
-        System.out.println("\u001b[34m   ██╗      ██████╗  ██████╗ ██╗███╗   ██╗");
-        System.out.println("   ██║     ██╔═══██╗██╔════╝ ██║████╗  ██║");
-        System.out.println("   ██║     ██║   ██║██║  ███╗██║██╔██╗ ██║");
-        System.out.println("   ██║     ██║   ██║██║   ██║██║██║╚██╗██║");
-        System.out.println("   ███████╗╚██████╔╝╚██████╔╝██║██║ ╚████║");
-        System.out.println("   ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝");
-        System.out.println("\u001b[38;5;214m╰──────────────────────────────────────────╯\u001b[0m");
-    }
-
-    public static void printMenu() {
-        System.out.println("\u001b[38;5;214m╭──────────────────────────────────────────╮\u001b[0m");
-        System.out.println("\u001b[34m   ███╗   ███╗███████╗███╗   ██╗██╗   ██╗");
-        System.out.println("   ████╗ ████║██╔════╝████╗  ██║██║   ██║");
-        System.out.println("   ██╔████╔██║█████╗  ██╔██╗ ██║██║   ██║");
-        System.out.println("   ██║╚██╔╝██║██╔══╝  ██║╚██╗██║██║   ██║");
-        System.out.println("   ██║ ╚═╝ ██║███████╗██║ ╚████║╚██████╔╝");
-        System.out.println("   ╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝");
-        System.out.println("\u001b[38;5;214m╰──────────────────────────────────────────╯\u001b[0m");
-        printLineBreak("Commands");
-        System.out.println("        \u001b[35m               ╔════════════════════════════════════════╗");
-        System.out.print  ("        \u001b[35m╔══════════════╣");
-        System.out.println("\u001b[34m ◈ new - creates new cryptogram         \u001b[35m║");
-        System.out.print  ("        \u001b[35m║  ◈  MENU  ◈  ║");
-        System.out.println("\u001b[34m ◈ load - loads saved cryptogram        \u001b[35m║");
-        System.out.print  ("        \u001b[35m╚══════════════╣");
-        System.out.println("\u001b[34m ◈ stats - lists player stats           \u001b[35m║");
-        System.out.print  ("        \u001b[35m               ║");
-        System.out.println("\u001b[34m ◈ quit - closes game                   \u001b[35m║");
-        System.out.println("        \u001b[35m               ╚════════════════════════════════════════╝");
-        System.out.println("\u001b[0m");
-    }
-
-    public static void printTitle() {
-        System.out.println("\u001b[38;5;214m╭──────────────────────────────────────────────────────────────────────────────────────────────────────────────╮");
-        System.out.println("\u001b[34m    █████████                                  █████                                                         ");
-        System.out.println("   ███░░░░░███                                ░░███                                                          ");
-        System.out.println("  ███     ░░░  ████████  █████ ████ ████████  ███████    ██████   ███████ ████████   ██████   █████████████  ");
-        System.out.println(" ░███         ░░███░░███░░███ ░███ ░░███░░███░░░███░    ███░░███ ███░░███░░███░░███ ░░░░░███ ░░███░░███░░███ ");
-        System.out.println(" ░███          ░███ ░░░  ░███ ░███  ░███ ░███  ░███    ░███ ░███░███ ░███ ░███ ░░░   ███████  ░███ ░███ ░███ ");
-        System.out.println(" ░░███     ███ ░███      ░███ ░███  ░███ ░███  ░███ ███░███ ░███░███ ░███ ░███      ███░░███  ░███ ░███ ░███ ");
-        System.out.println("  ░░█████████  █████     ░░███████  ░███████   ░░█████ ░░██████ ░░███████ █████    ░░████████ █████░███ █████");
-        System.out.println("   ░░░░░░░░░  ░░░░░       ░░░░░███  ░███░░░     ░░░░░   ░░░░░░   ░░░░░███░░░░░      ░░░░░░░░ ░░░░░ ░░░ ░░░░░");
-        System.out.println("                          ███ ░███  ░███                         ███ ░███                                    ");
-        System.out.println("                         ░░██████   █████                       ░░██████                                     ");
-        System.out.println("                          ░░░░░░   ░░░░░                         ░░░░░░                                      ");
-        System.out.println("\u001b[38;5;214m╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────╯\u001b[0m");
-    }
 
     public static void printLineBreak(String name) {
         System.out.println("\n\u001b[38;5;214m╠═════════════════════════════════════╡ "+ name +" ╞═════════════════════════════════════╣\u001b[0m");
     }
 
-    public static void printCryptogram(Cryptogram cryptogram, Game game) {
+    public void printCryptogram(Cryptogram cryptogram) {
        String[] encrypted = cryptogram.getEncryptedPhrase();
 
        printLineBreak("Cryptogram");
        for (String s : encrypted) System.out.printf("%-3s", s);
        System.out.println();
 
-       if (game.playerGameMapping != null) {
-           for (String s : game.playerGameMapping) {
+       if (this.playerGameMapping != null) {
+           for (String s : this.playerGameMapping) {
                if (s.equals("- ")) {
                    System.out.printf("%-3s", s);
                } else {
@@ -319,6 +235,7 @@ public class Game implements Serializable {
         boolean found = false;
         boolean isFull = true;
         boolean alreadyOverriding = false;
+        int position = 0;
 
         Scanner sc = new Scanner(System.in);
 
@@ -347,6 +264,7 @@ public class Game implements Serializable {
             //Get the first char from user input string
             char encrypted_char = encrypted_guess.charAt(0);
 
+
             //Make char lowercase to be able to compare with other chars
             encrypted_char = Character.toUpperCase(encrypted_char);
 
@@ -368,8 +286,8 @@ public class Game implements Serializable {
                         if (playerGameMapping[i].equals("- ")) {
                             playerGameMapping[i] = letter + " ";
                             guessHistory[guessCount] = encrypted_char + " ";
-                            guessCount++;
-                            //Update player stats here
+                            position = i;
+
                         }
 
                         //Allow player to override their guess
@@ -395,6 +313,13 @@ public class Game implements Serializable {
             if(!found) {
                 System.out.println("\u001b[31mError, " + encrypted_char + " was not found within the cryptogram!");
                 return "Error";
+
+            } else {
+                //Update player stats here
+                guessCount++;
+                player.incrementTotalGuesses();
+                chechGuess(position, cryptogram);
+                player.updateAccuracy();
             }
         }
         //Only run if a numbers cryptogram was made
@@ -415,8 +340,7 @@ public class Game implements Serializable {
                     if(playerGameMapping[i].equals("- ")) {
                         playerGameMapping[i] = letter + " ";
                         guessHistory[guessCount] = encrypted_guess;
-                        guessCount++;
-                        //Update player stats here
+
                     }
 
                     //Allow player to override their guess
@@ -441,6 +365,12 @@ public class Game implements Serializable {
             if(!found) {
                 System.out.println("\u001b[31mError, " + encrypted_guess.substring(0, encrypted_guess.length()-1) + " was not found within the cryptogram!");
                 return "Error";
+            } else {
+                guessCount++;
+                //Update player stats here
+                player.incrementTotalGuesses();
+                chechGuess(position, cryptogram);
+                player.updateAccuracy();
             }
         }
 
@@ -504,6 +434,11 @@ public class Game implements Serializable {
 
     public void viewFrequencies() {}
 
+    public void chechGuess(int position, Cryptogram cryptogram) {
+        System.out.println("player mapping: '"+playerGameMapping[position].charAt(0) +"'\ncryptogram: '"+cryptogram.getPhrase().charAt(position)+"'");
+        if (playerGameMapping[position].charAt(0) == cryptogram.getPhrase().charAt(position)) {player.incrementCorrectGuesses();}
+    }
+
     //SAVE GAME
     public void saveGame(Cryptogram cryptogram) {
 
@@ -553,6 +488,10 @@ public class Game implements Serializable {
 
         }
 
+    }
+
+    public void setPlayerGameMapping(String[] playerGameMapping) {
+        this.playerGameMapping = playerGameMapping;
     }
 
     // public void generateCryptogram() {}
