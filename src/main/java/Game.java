@@ -1,7 +1,5 @@
 package src.main.java;
 
-import java.io.*;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.io.Serializable;
 import java.io.FileOutputStream;
@@ -66,7 +64,7 @@ public class Game implements Serializable {
         return players.getPlayer(player.getUsername());
     }
 
-    public void playGame( Cryptogram cryptogram, Player player) {
+    public void playGame(Cryptogram cryptogram, Player player) {
         // Cryptogram game loop
         boolean exit = false;
 
@@ -234,7 +232,6 @@ public class Game implements Serializable {
     public String enterLetter(Cryptogram cryptogram, char letter, String encrypted_guess) {
 
         //Initialise variables
-        boolean isUppercase;
         boolean found = false;
         boolean isFull = true;
         boolean alreadyOverriding = false;
@@ -320,7 +317,7 @@ public class Game implements Serializable {
                 //Update player stats here
                 guessCount++;
                 player.incrementTotalGuesses();
-                chechGuess(position, cryptogram);
+                checkGuess(position, cryptogram);
                 player.updateAccuracy();
             }
         }
@@ -341,7 +338,7 @@ public class Game implements Serializable {
                     //Store letter in playerGameMapping if guess has not already been made there
                     if(playerGameMapping[i].equals("- ")) {
                         playerGameMapping[i] = letter + " ";
-
+                        position = i;
                     }
 
                     //Allow player to override their guess
@@ -370,7 +367,7 @@ public class Game implements Serializable {
                 guessCount++;
                 //Update player stats here
                 player.incrementTotalGuesses();
-                chechGuess(position, cryptogram);
+                checkGuess(position, cryptogram);
                 player.updateAccuracy();
             }
         }
@@ -397,7 +394,6 @@ public class Game implements Serializable {
             }
             return "Correct";
         }
-
         return "Incomplete";
     }
 
@@ -406,6 +402,7 @@ public class Game implements Serializable {
             System.out.println("\u001b[35mNothing to undo!\u001b[0m\n");
             return;
         }
+        
         boolean found = false;
 
         for (int i = 0; i < cryptogram.getEncryptedPhrase().length; i++) {
@@ -429,9 +426,10 @@ public class Game implements Serializable {
 
     public void viewFrequencies() {}
 
-    public void chechGuess(int position, Cryptogram cryptogram) {
-        System.out.println("player mapping: '"+playerGameMapping[position].charAt(0) +"'\ncryptogram: '"+cryptogram.getPhrase().charAt(position)+"'");
-        if (playerGameMapping[position].charAt(0) == cryptogram.getPhrase().charAt(position)) {player.incrementCorrectGuesses();}
+    public void checkGuess(int position, Cryptogram cryptogram) {
+        if (playerGameMapping[position].charAt(0) == cryptogram.getPhrase().charAt(position)) {
+            player.incrementCorrectGuesses();
+        }
     }
 
     //SAVE GAME
