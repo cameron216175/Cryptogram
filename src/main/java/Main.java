@@ -61,7 +61,7 @@ public class Main {
         System.out.println("\u001b[34m ◈ Total cryptograms completed: \u001b[35m"+p.getNumCryptogramsCompleted());
         System.out.println("\u001b[34m ◈ Total cryptograms played: \u001b[35m"+p.getNumCryptogramsPlayed());
         System.out.println("\u001b[34m ◈ Accuracy: \u001b[35m% "+String.format("%.2f", p.getAccuracy()));
-        printLineBreak("bottom");
+        printLineBreak("     \u001b[34m◈\u001b[38;5;214m      ");
     }
 
     public static void printLogin() {
