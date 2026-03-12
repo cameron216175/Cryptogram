@@ -22,27 +22,32 @@ public class Main {
             System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
             String menu = sc.nextLine();
 
-            if (menu.equals("quit")) {
-                running = false;
-                System.out.println("\u001b[35mQuiting Game");
-                players.updatePlayer(player);
-                players.savePlayers();
-            } else if (menu.equals("stats")) {
-                printStats(player);
-                System.out.println("\u001b[35mto quit type anything");
-                System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
-                String stats = sc.nextLine();
-            } else if (menu.equals("new")) {
+            switch (menu) {
+                case "quit" -> {
+                    running = false;
+                    System.out.println("\u001b[35mQuiting Game");
+                    players.updatePlayer(player);
+                    players.savePlayers();
+                }
+                case "stats" -> {
+                    printStats(player);
+                    System.out.println("\u001b[35mto quit type anything");
+                    System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
+                    String stats = sc.nextLine();
+                }
+                case "new" -> {
 
-                player.incrementCryptogramsPlayed();
-                printTitle();
-                System.out.println("\u001b[35mEnter 0 for numbers and 1 for letters cryptogram:");
-                System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
-                String input = sc.nextLine();
-                Game game = new Game(player, input);
-            } else if (menu.equals("load")) {
-                Game game = new Game(player);
-                Cryptogram cryptogram = game.loadGame();
+                    player.incrementCryptogramsPlayed();
+                    printTitle();
+                    System.out.println("\u001b[35mEnter 0 for numbers and 1 for letters cryptogram:");
+                    System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
+                    String input = sc.nextLine();
+                    Game game = new Game(player, input);
+                }
+                case "load" -> {
+                    Game game = new Game(player);
+                    Cryptogram cryptogram = game.loadGame();
+                }
             }
         }
 
@@ -116,16 +121,16 @@ public class Main {
     public static Player loadPlayer(Players players) {
 
         Scanner sc = new Scanner(System.in);
-        printLineBreak("Please enter your usename");
+        printLineBreak("Please enter your username");
         System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
         String input = sc.nextLine();
         Player player = new Player(input);
         if (players.findPlayer(player) == null) {
             players.addPlayer(player);
-            System.out.print("\u001b[35mUser not found creating account\u001b[0m\n");
+            System.out.print("\u001b[35mUser not found, creating account. .\u001b[0m\n");
             return player;
         }
-        System.out.print("\u001b[35mUser found creating account\u001b[0m\n");
+        System.out.print("\u001b[35mUser found, logging in. .\u001b[0m\n");
         return players.getPlayer(player.getUsername());
     }
 
