@@ -1,7 +1,5 @@
 package src.main.java;
 
-import java.io.*;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.io.Serializable;
 import java.io.FileOutputStream;
@@ -12,7 +10,6 @@ import java.io.ObjectInputStream;
 public class Game implements Serializable {
     private String[] playerGameMapping;
     private String crypto_type = "";
-    private String[] guessHistory;
     private int guessCount = 0;
     private Player player;
 
@@ -20,7 +17,6 @@ public class Game implements Serializable {
     public Game(Player p, String cryptType) {
         this.player = p;
         Cryptogram cryptogram = this.generateCryptogram(cryptType);
-        this.guessHistory = new String[cryptogram.getEncryptedPhrase().length];
 
         this.playerGameMapping = new String[cryptogram.phrase.length()];
 
@@ -37,7 +33,6 @@ public class Game implements Serializable {
     public Game(Player p) {
         this.player = p;
         Cryptogram cryptogram = loadGame();
-        this.guessHistory = new String[cryptogram.getEncryptedPhrase().length];
 
         this.playerGameMapping = new String[cryptogram.phrase.length()];
 
@@ -69,7 +64,7 @@ public class Game implements Serializable {
         return players.getPlayer(player.getUsername());
     }
 
-    public void playGame( Cryptogram cryptogram, Player player) {
+    public void playGame(Cryptogram cryptogram, Player player) {
         // Cryptogram game loop
         boolean exit = false;
 
@@ -132,6 +127,10 @@ public class Game implements Serializable {
                         printLineBreak(" ");
                         player.incrementCryptogramsCompleted();
                         exit = true;
+                    }
+                    else if (completion.equals("Incorrect")) {
+                        printLineBreak(" ");
+                        System.out.println("\u001b[35mIncorrect! Please try again!\u001b[0m");
                     }
                     System.out.print("\n");
 
@@ -233,7 +232,6 @@ public class Game implements Serializable {
     public String enterLetter(Cryptogram cryptogram, char letter, String encrypted_guess) {
 
         //Initialise variables
-        boolean isUppercase;
         boolean found = false;
         boolean isFull = true;
         boolean alreadyOverriding = false;
@@ -287,7 +285,6 @@ public class Game implements Serializable {
                         //Store letter in playerGameMapping if a guess has not already been made there
                         if (playerGameMapping[i].equals("- ")) {
                             playerGameMapping[i] = letter + " ";
-                            guessHistory[guessCount] = encrypted_char + " ";
                             position = i;
 
                         }
@@ -320,7 +317,7 @@ public class Game implements Serializable {
                 //Update player stats here
                 guessCount++;
                 player.incrementTotalGuesses();
-                chechGuess(position, cryptogram);
+                checkGuess(position, cryptogram);
                 player.updateAccuracy();
             }
         }
@@ -341,8 +338,7 @@ public class Game implements Serializable {
                     //Store letter in playerGameMapping if guess has not already been made there
                     if(playerGameMapping[i].equals("- ")) {
                         playerGameMapping[i] = letter + " ";
-                        guessHistory[guessCount] = encrypted_guess;
-
+                        position = i;
                     }
 
                     //Allow player to override their guess
@@ -371,7 +367,7 @@ public class Game implements Serializable {
                 guessCount++;
                 //Update player stats here
                 player.incrementTotalGuesses();
-                chechGuess(position, cryptogram);
+                checkGuess(position, cryptogram);
                 player.updateAccuracy();
             }
         }
@@ -398,7 +394,6 @@ public class Game implements Serializable {
             }
             return "Correct";
         }
-
         return "Incomplete";
     }
 
@@ -407,38 +402,34 @@ public class Game implements Serializable {
             System.out.println("\u001b[35mNothing to undo!\u001b[0m\n");
             return;
         }
+        
         boolean found = false;
-        for (int i = 0; i < guessCount; i++) {
-            if (guessHistory[i].equals(undoLetter) || guessHistory[i].equals(undoLetter.toUpperCase())) {
-                found = true;
-                for (int j = i; j < guessCount; j++) {
-                    guessHistory[j] = guessHistory[j + 1];
-                }
-                guessHistory[guessCount - 1] = "";
-                guessCount--;
-                break;
 
+        for (int i = 0; i < cryptogram.getEncryptedPhrase().length; i++) {
+            if (cryptogram.getEncryptedPhrase()[i].equalsIgnoreCase(undoLetter)) {
+                if (!playerGameMapping[i].equals("- ")) {
+                    playerGameMapping[i] = "- ";
+                    found = true;
+                }
             }
         }
-        if (!found) {
-            System.out.println("\u001b[35mNo guess found for: " + undoLetter + "\u001b[0m\n");
-        } else {
-            String[] encrypted_phrase = cryptogram.getEncryptedPhrase();
 
-            for (int i = 0; i < encrypted_phrase.length; i++) {
-                if (encrypted_phrase[i].equalsIgnoreCase(undoLetter)) {
-                    playerGameMapping[i] = "- ";
-                }
-            }
+        if(found){
             System.out.println("\u001b[35mUndid guess for: \u001b[34m" + undoLetter + "\u001b[0m");
+            guessCount--;
+        }
+        else{
+            System.out.println("\u001b[35mNo guess found for " + undoLetter + "!\u001b[0m");
+
         }
     }
 
     public void viewFrequencies() {}
 
-    public void chechGuess(int position, Cryptogram cryptogram) {
-        System.out.println("player mapping: '"+playerGameMapping[position].charAt(0) +"'\ncryptogram: '"+cryptogram.getPhrase().charAt(position)+"'");
-        if (playerGameMapping[position].charAt(0) == cryptogram.getPhrase().charAt(position)) {player.incrementCorrectGuesses();}
+    public void checkGuess(int position, Cryptogram cryptogram) {
+        if (playerGameMapping[position].charAt(0) == cryptogram.getPhrase().charAt(position)) {
+            player.incrementCorrectGuesses();
+        }
     }
 
     //SAVE GAME
@@ -472,7 +463,6 @@ public class Game implements Serializable {
             Cryptogram cryptogram = (Cryptogram) in.readObject();
 
             this.playerGameMapping = loadedGame.playerGameMapping;
-            this.guessHistory = loadedGame.guessHistory;
             this.guessCount = loadedGame.guessCount;
             this.crypto_type = loadedGame.crypto_type;
 
