@@ -1,4 +1,4 @@
-package src.main.java;
+package src.test.java;
 
 public class StorePlayerNameTest {
 }
