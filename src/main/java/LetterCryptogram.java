@@ -7,10 +7,6 @@ public class LetterCryptogram extends Cryptogram implements Serializable {
 
     protected char[] encrypted_values = new char[26];
 
-    public LetterCryptogram(String file) {
-
-    }
-
     public LetterCryptogram() {
 
         phrase = Cryptogram.newGram().toUpperCase();

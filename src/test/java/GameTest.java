@@ -2,11 +2,13 @@ package src.test.java;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import src.main.java.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.util.Scanner;
+
+import src.main.java.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,9 +25,9 @@ class GameTest {
 
     @Test
     void generateNumberCryptogramTest() {
-            System.out.println("Creating numbers cryptogram");
-            NumberCryptogram number_cryptogram = new NumberCryptogram();
-            System.out.print("The cryptogram is: " + String.valueOf(number_cryptogram.getEncryptedPhrase()));
+        System.out.println("Creating numbers cryptogram");
+        NumberCryptogram number_cryptogram = new NumberCryptogram();
+        System.out.print("The cryptogram is: " + String.valueOf(number_cryptogram.getEncryptedPhrase()));
     }
 
     @Test
@@ -36,36 +38,77 @@ class GameTest {
     }
 
     @Test
-    void testSaveLoad() {
+    public void GameCreationTest() {
 
-        Player p = new Player("test", 1, 1, 1, 0, 1);
-        Game game = new Game(p);
+        String input = "exit\n";
 
-        LetterCryptogram lc = new LetterCryptogram();
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
 
-        game.saveGame(lc);
+        Player p = new Player("test");
 
-        Cryptogram loaded =  game.loadGame();
+        Game game = new Game(p, "1");
 
-        assertNotNull(loaded);
+        assertTrue(true);
 
     }
 
     @Test
-    void testLoadMatch() {
+    public void GenerateCryptogramTest() {
 
-        Player p = new Player("test", 1, 1, 1, 0, 1);
-        Game game = new Game(p);
+        String input = "exit\n";
 
-        LetterCryptogram lc = new LetterCryptogram();
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
 
-        String original = lc.getPhrase();
+        Player p = new Player("test");
 
-        game.saveGame(lc);
+        Game game = new Game(p, "1");
 
-        Cryptogram loaded =  game.loadGame();
+        Cryptogram c = game.generateCryptogram("1");
 
-        assertEquals(original,lc.getPhrase());
+        assertNotNull(c);
 
     }
+
+    @Test
+    public void FileCreationTest() {
+        String input = "exit\n";
+
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        Player p = new Player("test");
+
+        Game game = new Game(p, "1");
+
+        game.saveGame();
+
+        File savefile = new File("savegame_test.ser");
+
+        assertTrue(savefile.exists());
+
+        savefile.delete();
+
+        assertFalse(savefile.exists());
+
+    }
+
+    @Test
+    public void LoadGameTest() {
+        String input = "exit\n";
+
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        Player p = new Player("test");
+
+        Game game = new Game(p, "1");
+
+        game.saveGame();
+
+        Game loadedGame = Game.loadGame(p);
+
+        assertNotNull(loadedGame);
+
+    }
+
+
+
 }

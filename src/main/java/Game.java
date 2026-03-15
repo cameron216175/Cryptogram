@@ -8,33 +8,19 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 
 public class Game implements Serializable {
+    private Cryptogram cryptogram;
+    private Player player;
     private String[] playerGameMapping;
     private String crypto_type = "";
     private int guessCount = 0;
-    private Player player;
+
 
 
     public Game(Player p, String cryptType) {
         this.player = p;
-        Cryptogram cryptogram = this.generateCryptogram(cryptType);
+        this.cryptogram = this.generateCryptogram(cryptType);
 
-        this.playerGameMapping = new String[cryptogram.phrase.length()];
-
-        this.playerGameMapping = cryptogram.getEncryptedPhrase().clone();
-        for(int i = 0; i < this.playerGameMapping.length; i++) {
-
-            if(this.playerGameMapping[i].charAt(0) != ' '){
-                this.playerGameMapping[i] = "- ";
-            }
-        }
-        playGame(cryptogram, p);
-    }
-
-    public Game(Player p) {
-        this.player = p;
-        Cryptogram cryptogram = loadGame();
-
-        this.playerGameMapping = new String[cryptogram.phrase.length()];
+        //this.playerGameMapping = new String[cryptogram.phrase.length()];
 
         this.playerGameMapping = cryptogram.getEncryptedPhrase().clone();
         for(int i = 0; i < this.playerGameMapping.length; i++) {
@@ -43,7 +29,7 @@ public class Game implements Serializable {
                 this.playerGameMapping[i] = "- ";
             }
         }
-        playGame(cryptogram, p);
+        playGame();
     }
 
     public void getHint () {}
@@ -64,7 +50,7 @@ public class Game implements Serializable {
         return players.getPlayer(player.getUsername());
     }
 
-    public void playGame(Cryptogram cryptogram, Player player) {
+    public void playGame() {
         // Cryptogram game loop
         boolean exit = false;
 
@@ -72,7 +58,7 @@ public class Game implements Serializable {
         while(!exit) {
 
             System.out.print("\n");
-            printCryptogram(cryptogram);
+            printCryptogram(this.cryptogram);
 
             System.out.println("\n\u001b[35mWhat would you like to do? (enter 'help' to see a list of commands!)");
             System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
@@ -92,14 +78,22 @@ public class Game implements Serializable {
                     }
 
                     String undoLetter = inputs[1] + " ";
-                    undoLetter(cryptogram, undoLetter);
+                    undoLetter(this.cryptogram, undoLetter);
                 }
                 case "save" -> {
-                    saveGame(cryptogram);
+                    saveGame();
                 }
                 case "load" -> {
-                    cryptogram = loadGame();
-                    printCryptogram(cryptogram);
+
+                    Game loadedGame = Game.loadGame(this.player);
+
+                    if (loadedGame != null) {
+
+                        loadedGame.playGame();
+
+                        return;
+
+                    }
                 }
                 case "exit" -> {
                     System.out.println("\u001b[35mExiting Game...\u001b[0m");
@@ -119,13 +113,13 @@ public class Game implements Serializable {
                     //Take encrypted guess from the rest of the string
                     String encrypted_guess = inputs[2];
                     //Call enterLetter method
-                    String completion = enterLetter(cryptogram, letter, encrypted_guess);
+                    String completion = enterLetter(this.cryptogram, letter, encrypted_guess);
                     if (completion.equals("Correct")) {
                         printLineBreak(" ");
                         System.out.println();
                         printCompleted();
                         printLineBreak(" ");
-                        player.incrementCryptogramsCompleted();
+                        this.player.incrementCryptogramsCompleted();
                         exit = true;
                     }
                     else if (completion.equals("Incorrect")) {
@@ -432,15 +426,21 @@ public class Game implements Serializable {
         }
     }
 
+
+
     //SAVE GAME
-    public void saveGame(Cryptogram cryptogram) {
+    public void saveGame() {
+
+        String filename = "savegame_" + player.getUsername() + ".ser";
 
         try {
 
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("savegame.ser"));
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename));
+
             out.writeObject(this);
-            out.writeObject(cryptogram);
+
             out.close();
+
             System.out.println("Game saved...");
 
         } catch (Exception e) {
@@ -452,25 +452,29 @@ public class Game implements Serializable {
     }
 
     //LOAD GAME
-    public Cryptogram loadGame() {
+    public static Game loadGame(Player player) {
+
+        String filename = "savegame_" + player.getUsername() + ".ser";
 
         try {
 
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream("savegame.ser"));
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename));
 
-            Game loadedGame = (Game) in.readObject();
+            Game game = (Game) in.readObject();
 
-            Cryptogram cryptogram = (Cryptogram) in.readObject();
+            //Cryptogram cryptogram = (Cryptogram) in.readObject();
 
-            this.playerGameMapping = loadedGame.playerGameMapping;
-            this.guessCount = loadedGame.guessCount;
-            this.crypto_type = loadedGame.crypto_type;
+            //this.playerGameMapping = loadedGame.playerGameMapping;
+            //this.guessCount = loadedGame.guessCount;
+            //this.crypto_type = loadedGame.crypto_type;
 
             in.close();
 
             System.out.println("Game loaded...");
 
-            return cryptogram;
+            //return cryptogram;
+
+            return game;
 
         } catch (Exception e) {
 

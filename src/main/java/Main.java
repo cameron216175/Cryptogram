@@ -45,12 +45,21 @@ public class Main {
                     Game game = new Game(player, input);
                 }
                 case "load" -> {
-                    Game game = new Game(player);
-                    Cryptogram cryptogram = game.loadGame();
+
+                    //Game game = new Game(player);
+
+                    Game loadedGame = Game.loadGame(player);
+
+                    if (loadedGame != null) {
+
+                        loadedGame.playGame();
+
+                        return;
+
+                    }
                 }
             }
         }
-
     }
 
     public static void printStats(Player p) {
