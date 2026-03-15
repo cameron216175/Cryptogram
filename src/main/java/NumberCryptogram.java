@@ -7,8 +7,6 @@ public class NumberCryptogram extends Cryptogram implements Serializable {
 
     protected int[] encrypted_values = new int[26];
 
-    public NumberCryptogram(String file) {}
-
     public NumberCryptogram() {
 
         phrase = Cryptogram.newGram().toUpperCase();
