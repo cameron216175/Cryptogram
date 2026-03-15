@@ -32,26 +32,6 @@ public class Game implements Serializable {
         playGame();
     }
 
-    /*
-
-    public Game(Player p) {
-        this.player = p;
-        Cryptogram cryptogram = loadGame();
-
-        this.playerGameMapping = new String[cryptogram.phrase.length()];
-
-        this.playerGameMapping = cryptogram.getEncryptedPhrase().clone();
-        for(int i = 0; i < this.playerGameMapping.length; i++) {
-
-            if(this.playerGameMapping[i].charAt(0) != ' '){
-                this.playerGameMapping[i] = "- ";
-            }
-        }
-        playGame(cryptogram, p);
-    }
-
-     */
-
     public void getHint () {}
 
     public static Player loadPlayer(Players players) {
