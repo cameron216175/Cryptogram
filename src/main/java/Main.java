@@ -25,7 +25,7 @@ public class Main {
             switch (menu) {
                 case "quit" -> {
                     running = false;
-                    System.out.println("\u001b[35mQuiting Game");
+                    System.out.println("\u001b[35mQuitting Game");
                     players.updatePlayer(player);
                     players.savePlayers();
                 }
@@ -36,7 +36,6 @@ public class Main {
                     String stats = sc.nextLine();
                 }
                 case "new" -> {
-
                     player.incrementCryptogramsPlayed();
                     printTitle();
                     System.out.println("\u001b[35mEnter 0 for numbers and 1 for letters cryptogram:");
@@ -45,14 +44,11 @@ public class Main {
                     Game game = new Game(player, input);
                 }
                 case "load" -> {
-
-                    //Game game = new Game(player);
-
                     Game loadedGame = Game.loadGame(player);
-
                     if (loadedGame != null) {
                         loadedGame.playGame();
                     }
+
                 }
             }
         }
