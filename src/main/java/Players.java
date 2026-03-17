@@ -48,13 +48,11 @@ public class Players {
     }
 
     public boolean removePlayer(Player p) {
-        if (findPlayer(p) != null) {
-            for(int x = 0; x < allPlayers.size(); x++) {
-                if (allPlayers.get(x).getUsername().equals(p.getUsername())) {
-                    allPlayers.remove(x);
-                }
+        for(int x = 0; x < allPlayers.size(); x++) {
+            if (allPlayers.get(x).getUsername().equals(p.getUsername())) {
+                allPlayers.remove(x);
+                return true;
             }
-            return findPlayer(p) == null;
         }
         return false;
     }

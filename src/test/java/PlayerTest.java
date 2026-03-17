@@ -16,6 +16,42 @@ class PlayerTest {
     }
 
     @Test
+    void testUpdateAccuracy() {
+        for (int i = 0; i < 20; i++) {
+            if (i % 2 == 0) {
+                player.incrementCorrectGuesses();
+            }
+            player.incrementTotalGuesses();
+        }
+        player.updateAccuracy();
+        assertEquals(50, player.getAccuracy());
+    }
+
+    @Test
+    void testIncrementCryptogramsCompleted() {
+        for (int i = 0; i < 20; i++) {
+                player.incrementCryptogramsCompleted();
+        }
+        assertEquals(20, player.getNumCryptogramsCompleted());
+    }
+
+    @Test
+    void testIncrementCryptogramsPlayed() {
+        for (int i = 0; i < 20; i++) {
+            player.incrementCryptogramsPlayed();
+        }
+        assertEquals(20, player.getNumCryptogramsPlayed());
+    }
+
+    @Test
+    void testIncrementCorrectGuesses() {
+        for (int i = 0; i < 20; i++) {
+            player.incrementCorrectGuesses();
+        }
+        assertEquals(20, player.getCorrectGuesses());
+    }
+
+    @Test
     void testGetAccuracy() {
         assertEquals(0.0, player.getAccuracy());
     }

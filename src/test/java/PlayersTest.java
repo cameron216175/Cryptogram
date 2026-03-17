@@ -39,6 +39,46 @@ class PlayersTest {
     }
 
     @Test
+    void testRemovePlayer() {
+        players.addPlayer(player);
+        Assertions.assertTrue(players.removePlayer(player));
+        Assertions.assertFalse(players.removePlayer(player));
+    }
+
+    @Test
+    void testFindPlayer() {
+        players.addPlayer(player);
+        Assertions.assertEquals("conor", players.findPlayer(player));
+        players.removePlayer(player);
+        Assertions.assertNull(players.findPlayer(player));
+    }
+
+    @Test
+    void testUpdatePlayer() {
+        players.addPlayer(player);
+        Assertions.assertTrue(players.updatePlayer(player));
+        players.removePlayer(player);
+        Assertions.assertFalse(players.updatePlayer(player));
+    }
+
+    @Test
+    void testReadPlayers() throws IOException {
+        Player player2 = new Player("testinguser");
+        players.addPlayer(player2);
+        players.savePlayers();
+        Players readPlayers = new Players();
+        Assertions.assertEquals("testinguser", readPlayers.findPlayer(player2));
+        players.removePlayer(player2);
+        players.savePlayers();
+    }
+
+    @Test
+    void testGetPlayer() {
+        players.addPlayer(player);
+        Assertions.assertEquals(player.getUsername(), players.getPlayer("conor").getUsername());
+    }
+
+    @Test
     void testGetAllPlayersAccuracies() {
         Player player2 = new Player("test", 3, 3, 4, 5.5489, 4);
         players.removePlayer(player2);
