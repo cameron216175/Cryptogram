@@ -51,11 +51,7 @@ public class Main {
                     Game loadedGame = Game.loadGame(player);
 
                     if (loadedGame != null) {
-
                         loadedGame.playGame();
-
-                        return;
-
                     }
                 }
             }
