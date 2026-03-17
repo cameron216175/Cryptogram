@@ -1,11 +1,7 @@
 package src.main.java;
 
+import java.io.*;
 import java.util.Scanner;
-import java.io.Serializable;
-import java.io.FileOutputStream;
-import java.io.FileInputStream;
-import java.io.ObjectOutputStream;
-import java.io.ObjectInputStream;
 
 public class Game implements Serializable {
     private Cryptogram cryptogram;
@@ -114,14 +110,27 @@ public class Game implements Serializable {
                     String encrypted_guess = inputs[2];
                     //Call enterLetter method
                     String completion = enterLetter(this.cryptogram, letter, encrypted_guess);
+
                     if (completion.equals("Correct")) {
                         printLineBreak(" ");
                         System.out.println();
                         printCompleted();
                         printLineBreak(" ");
                         this.player.incrementCryptogramsCompleted();
+                        String filename = "savegame_" + player.getUsername() + ".ser";
+                        File file = new File(filename);
+                        if (file.exists()) {
+                            try {
+                                if (file.delete()) {} else {
+                                    System.out.println("File deletion failed.");
+                                }
+                            } catch (Exception e) {
+                                System.out.println("File deletion failed." + e.getMessage());
+                            }
+                        }
                         exit = true;
                     }
+
                     else if (completion.equals("Incorrect")) {
                         printLineBreak(" ");
                         System.out.println("\u001b[35mIncorrect! Please try again!\u001b[0m");
