@@ -1,12 +1,14 @@
 package src.main.java;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Game implements Serializable {
     private Cryptogram cryptogram;
     private Player player;
-    private String[] playerGameMapping;
+    private ArrayList<String> playerGameMapping = new ArrayList<>();
     private String crypto_type = "";
     private int guessCount = 0;
 
@@ -16,16 +18,13 @@ public class Game implements Serializable {
         this.player = p;
         this.cryptogram = this.generateCryptogram(cryptType);
 
-        //this.playerGameMapping = new String[cryptogram.phrase.length()];
+        this.playerGameMapping.addAll(Arrays.asList(cryptogram.getEncryptedPhrase()));
 
-        this.playerGameMapping = cryptogram.getEncryptedPhrase().clone();
-        for(int i = 0; i < this.playerGameMapping.length; i++) {
-
-            if(this.playerGameMapping[i].charAt(0) != ' '){
-                this.playerGameMapping[i] = "- ";
+        for(int i = 0; i < this.playerGameMapping.size(); i++) {
+            if(this.playerGameMapping.get(i).charAt(0) != ' '){
+                this.playerGameMapping.set(i, "- ");
             }
         }
-        playGame();
     }
 
     public void getHint () {}
@@ -121,7 +120,7 @@ public class Game implements Serializable {
                         File file = new File(filename);
                         if (file.exists()) {
                             try {
-                                if (file.delete()) {} else {
+                                if (!file.delete()) {
                                     System.out.println("File deletion failed.");
                                 }
                             } catch (Exception e) {
@@ -286,8 +285,8 @@ public class Game implements Serializable {
                         found = true;
 
                         //Store letter in playerGameMapping if a guess has not already been made there
-                        if (playerGameMapping[i].equals("- ")) {
-                            playerGameMapping[i] = letter + " ";
+                        if (playerGameMapping.get(i).equals("- ")) {
+                            playerGameMapping.set(i, letter + " ");
                             position = i;
 
                         }
@@ -306,7 +305,7 @@ public class Game implements Serializable {
                                     alreadyOverriding = true;
                                 }
                             }
-                            playerGameMapping[i] = letter + " ";
+                            playerGameMapping.set(i, letter + " ");
                         }
                     }
                 }
@@ -339,8 +338,8 @@ public class Game implements Serializable {
                     found = true;
 
                     //Store letter in playerGameMapping if guess has not already been made there
-                    if(playerGameMapping[i].equals("- ")) {
-                        playerGameMapping[i] = letter + " ";
+                    if(playerGameMapping.get(i).equals("- ")) {
+                        playerGameMapping.set(i, letter + " ");
                         position = i;
                     }
 
@@ -358,7 +357,7 @@ public class Game implements Serializable {
                                 alreadyOverriding = true;
                             }
                         }
-                        playerGameMapping[i] = letter + " ";
+                        playerGameMapping.set(i, letter + " ");
                     }
                 }
             }
@@ -410,8 +409,8 @@ public class Game implements Serializable {
 
         for (int i = 0; i < cryptogram.getEncryptedPhrase().length; i++) {
             if (cryptogram.getEncryptedPhrase()[i].equalsIgnoreCase(undoLetter)) {
-                if (!playerGameMapping[i].equals("- ")) {
-                    playerGameMapping[i] = "- ";
+                if (!playerGameMapping.get(i).equals("- ")) {
+                    playerGameMapping.set(i, "- ");
                     found = true;
                 }
             }
@@ -430,7 +429,7 @@ public class Game implements Serializable {
     public void viewFrequencies() {}
 
     public void checkGuess(int position, Cryptogram cryptogram) {
-        if (playerGameMapping[position].charAt(0) == cryptogram.getPhrase().charAt(position)) {
+        if (playerGameMapping.get(position).charAt(0) == cryptogram.getPhrase().charAt(position)) {
             player.incrementCorrectGuesses();
         }
     }
@@ -495,7 +494,7 @@ public class Game implements Serializable {
 
     }
 
-    public void setPlayerGameMapping(String[] playerGameMapping) {
+    public void setPlayerGameMapping(ArrayList<String> playerGameMapping) {
         this.playerGameMapping = playerGameMapping;
     }
 

@@ -42,6 +42,7 @@ public class Main {
                     System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
                     String input = sc.nextLine();
                     Game game = new Game(player, input);
+                    game.playGame();
                 }
                 case "load" -> {
                     Game loadedGame = Game.loadGame(player);
