@@ -36,7 +36,6 @@ public class Main {
                     String stats = sc.nextLine();
                 }
                 case "new" -> {
-                    player.incrementCryptogramsPlayed();
                     printTitle();
                     System.out.println("\u001b[35mEnter 0 for numbers and 1 for letters cryptogram:");
                     System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
