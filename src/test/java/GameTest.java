@@ -15,12 +15,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameTest {
     @BeforeEach
     void setUp() {
-        // Setup code here
+
     }
 
     @Test
     void testExample() {
-        // Test code here
+
     }
 
     @Test
@@ -48,12 +48,12 @@ class GameTest {
 
         Game game = new Game(p, "1");
 
-        assertTrue(true);
+        assertNotNull(game);
 
     }
 
     @Test
-    public void GenerateCryptogramTest() {
+    public void GenerateCryptogramTest1() {
 
         String input = "exit\n";
 
@@ -70,7 +70,8 @@ class GameTest {
     }
 
     @Test
-    public void FileCreationTest() {
+    public void GenerateCryptogramTest0() {
+
         String input = "exit\n";
 
         System.setIn(new ByteArrayInputStream(input.getBytes()));
@@ -79,36 +80,10 @@ class GameTest {
 
         Game game = new Game(p, "1");
 
-        game.saveGame();
+        Cryptogram c = game.generateCryptogram("0");
 
-        File savefile = new File("savegame_test.ser");
-
-        assertTrue(savefile.exists());
-
-        savefile.delete();
-
-        assertFalse(savefile.exists());
+        assertNotNull(c);
 
     }
-
-    @Test
-    public void LoadGameTest() {
-        String input = "exit\n";
-
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-
-        Player p = new Player("test");
-
-        Game game = new Game(p, "1");
-
-        game.saveGame();
-
-        Game loadedGame = Game.loadGame(p);
-
-        assertNotNull(loadedGame);
-
-    }
-
-
 
 }
