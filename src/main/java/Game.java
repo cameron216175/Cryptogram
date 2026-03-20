@@ -17,6 +17,7 @@ public class Game implements Serializable {
     public Game(Player p, String cryptType) {
         this.player = p;
         this.cryptogram = this.generateCryptogram(cryptType);
+        player.incrementCryptogramsPlayed();
 
         this.playerGameMapping.addAll(Arrays.asList(cryptogram.getEncryptedPhrase()));
 
@@ -110,32 +111,7 @@ public class Game implements Serializable {
                     //Call enterLetter method
                     String completion = enterLetter(this.cryptogram, letter, encrypted_guess);
 
-                    if (completion.equals("Correct")) {
-                        printLineBreak(" ");
-                        System.out.println();
-                        printCompleted();
-                        printLineBreak(" ");
-                        this.player.incrementCryptogramsCompleted();
-                        String filename = "savegame_" + player.getUsername() + ".ser";
-                        File file = new File(filename);
-                        if (file.exists()) {
-                            try {
-                                if (!file.delete()) {
-                                    System.out.println("File deletion failed.");
-                                }
-                            } catch (Exception e) {
-                                System.out.println("File deletion failed." + e.getMessage());
-                            }
-                        }
-                        exit = true;
-                    }
-
-                    else if (completion.equals("Incorrect")) {
-                        printLineBreak(" ");
-                        System.out.println("\u001b[35mIncorrect! Please try again!\u001b[0m");
-                    }
-                    System.out.print("\n");
-
+                    exit = checkCompletion(completion);
                 }
                 default -> {
                     System.out.println("Invalid input!");
@@ -513,5 +489,38 @@ public class Game implements Serializable {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public boolean checkCompletion(String completion){
+
+        boolean exit = false;
+
+        if (completion.equals("Correct")) {
+            printLineBreak(" ");
+            System.out.println();
+            printCompleted();
+            printLineBreak(" ");
+            this.player.incrementCryptogramsCompleted();
+            String filename = "savegame_" + player.getUsername() + ".ser";
+            File file = new File(filename);
+            if (file.exists()) {
+                try {
+                    if (!file.delete()) {
+                        System.out.println("File deletion failed.");
+                    }
+                } catch (Exception e) {
+                    System.out.println("File deletion failed." + e.getMessage());
+                }
+            }
+            exit = true;
+        }
+
+        else if (completion.equals("Incorrect")) {
+            printLineBreak(" ");
+            System.out.println("\u001b[35mIncorrect! Please try again!\u001b[0m");
+        }
+        System.out.print("\n");
+
+        return exit;
     }
 }

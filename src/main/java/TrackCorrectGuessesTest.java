@@ -4,7 +4,7 @@ import org.junit.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-public class TrackCorrectGuesses {
+public class TrackCorrectGuessesTest {
 
     @Test
     public void Scenario1() {
