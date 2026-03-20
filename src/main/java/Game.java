@@ -475,6 +475,12 @@ public class Game implements Serializable {
         this.playerGameMapping = playerGameMapping;
     }
 
+    public ArrayList<String> getPlayerGameMapping() {
+
+        return playerGameMapping;
+
+    }    
+
     // public void generateCryptogram() {}
 
     public void showSolution() {}
