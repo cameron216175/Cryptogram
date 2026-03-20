@@ -256,6 +256,7 @@ public class Game implements Serializable {
         }
 
         encrypted_guess = trimInput(encrypted_guess);
+
         letter = Character.toUpperCase(letter);
 
         //Store encrypted phrase in a variable
@@ -504,5 +505,13 @@ public class Game implements Serializable {
 
     public String getCryptoType() {
         return crypto_type;
+    }
+
+    public Cryptogram getCryptogram() {
+        return cryptogram;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }
