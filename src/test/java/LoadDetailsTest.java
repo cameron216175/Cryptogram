@@ -1,9 +1,6 @@
-package src.main.java;
+package src.test.java;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
 
 public class LoadDetailsTest {
 

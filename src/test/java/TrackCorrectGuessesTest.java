@@ -1,5 +1,7 @@
-package src.main.java;
+package src.test.java;
 import org.junit.*;
+import src.main.java.Game;
+import src.main.java.Player;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

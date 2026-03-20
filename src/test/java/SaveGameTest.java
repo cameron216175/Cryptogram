@@ -1,8 +1,6 @@
-package src.main.java;
+package src.test.java;
 
 import org.junit.jupiter.api.Test;
-
-import java.io.*;
 
 public class SaveGameTest {
 

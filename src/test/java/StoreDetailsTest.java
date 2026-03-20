@@ -1,6 +1,8 @@
-package src.main.java;
+package src.test.java;
 
 import org.junit.jupiter.api.Test;
+import src.main.java.Player;
+import src.main.java.Players;
 
 import java.io.IOException;
 
