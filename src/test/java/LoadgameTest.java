@@ -5,7 +5,9 @@ import src.main.java.Game;
 import src.main.java.Player;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class LoadgameTest {
@@ -46,6 +48,19 @@ public class LoadgameTest {
 
         assertNotNull(loadedGame);
 
+    }
+
+    @Test
+    public void LoadGameNoFileTest() {
+        Player p = new Player("nonexistent_save_user");
+
+        // Make sure no save file exists for this player
+        File savefile = new File("savegame_nonexistent_save_user.ser");
+        if (savefile.exists()) savefile.delete();
+
+        Game result = Game.loadGame(p);
+
+        assertNull(result);
     }
 
 }

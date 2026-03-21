@@ -55,4 +55,16 @@ public class TrackCorrectCryptosTest {
 
     }
 
+    // Tests that completing 0 letters and exiting does not increment cryptograms completed
+    @Test
+    public void Scenario3() {
+        Player player = new Player("John Smith");
+        Game game = new Game(player, "1");
+
+        // Don't enter any letters, just check completion with "Incomplete"
+        game.checkCompletion("Incomplete");
+
+        assertEquals(0, game.getPlayer().getNumCryptogramsCompleted());
+    }
+
 }

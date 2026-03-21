@@ -1,10 +1,12 @@
 package src.test.java;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import src.main.java.Player;
 
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PlayerTest {
@@ -25,6 +27,14 @@ class PlayerTest {
         }
         player.updateAccuracy();
         assertEquals(50, player.getAccuracy());
+    }
+
+    @Test
+    void testUpdateAccuracyNoGuesses() {
+        Player freshPlayer = new Player("noguesses");
+        // totalGuesses is 0, this should not throw or produce NaN
+        freshPlayer.updateAccuracy();
+        Assertions.assertFalse(Double.isNaN(freshPlayer.getAccuracy()));
     }
 
     @Test

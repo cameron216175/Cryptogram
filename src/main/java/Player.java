@@ -31,6 +31,10 @@ public class Player implements Serializable {
 	// SETTERS
 
 	public void updateAccuracy() {
+		if (totalGuesses == 0) {
+			this.accuracy = 0.0;
+			return;
+		}
 		this.accuracy =  ((double) this.correctGuesses / this.totalGuesses) * 100.0;
 	}
 	public void incrementCryptogramsCompleted() {
