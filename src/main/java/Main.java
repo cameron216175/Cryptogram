@@ -37,9 +37,15 @@ public class Main {
                 }
                 case "new" -> {
                     printTitle();
-                    System.out.println("\u001b[35mEnter 0 for numbers and 1 for letters cryptogram:");
-                    System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
-                    String input = sc.nextLine();
+                    String input;
+                    while(true) {
+                        System.out.println("\u001b[35mEnter 0 for numbers and 1 for letters cryptogram:");
+                        System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
+                        input = sc.nextLine();
+                        if (input.equals("0")||input.equals("1")) break;
+                        System.out.println("\u001b[35mInvalid input, please enter 0 or 1.\u001b[0m");
+                    }
+
                     Game game = new Game(player, input);
                     game.playGame();
                 }
