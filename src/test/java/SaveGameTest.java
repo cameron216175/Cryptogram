@@ -1,6 +1,8 @@
 package src.test.java;
 
 import java.util.ArrayList;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import src.main.java.Game;
 import src.main.java.Player;
@@ -13,6 +15,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class SaveGameTest {
+
+    @BeforeEach
+    public void setUp() {
+        // Delete test save file before every single test
+        new File("savegame_test.ser").delete();
+    }
 
     @Test
     public void FileCreationTestLetters() {
@@ -136,7 +144,6 @@ public class SaveGameTest {
 
     @Test
     public void PersistenceStatsTestLetters() {
-
         Player p = new Player("test");
         p.incrementCryptogramsCompleted();
 
@@ -147,6 +154,7 @@ public class SaveGameTest {
 
         assertEquals(p.getNumCryptogramsCompleted(), loaded.getPlayer().getNumCryptogramsCompleted());
 
+        // Clean up after test
         new File("savegame_test.ser").delete();
 
     }

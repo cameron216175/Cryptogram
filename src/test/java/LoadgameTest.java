@@ -14,39 +14,36 @@ public class LoadgameTest {
 
     @Test
     public void LoadGameTest1() {
-
-        String input = "exit\n";
-
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        // Clean up before test
+        new File("savegame_test.ser").delete();
 
         Player p = new Player("test");
-
         Game game = new Game(p, "1");
-
         game.saveGame();
 
         Game loadedGame = Game.loadGame(p);
-
         assertNotNull(loadedGame);
+
+        // Clean up after test
+        new File("savegame_test.ser").delete();
 
     }
 
     @Test
     public void LoadGameTest0() {
 
-        String input = "exit\n";
-
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        // Clean up before test
+        new File("savegame_test.ser").delete();
 
         Player p = new Player("test");
-
         Game game = new Game(p, "0");
-
         game.saveGame();
 
         Game loadedGame = Game.loadGame(p);
-
         assertNotNull(loadedGame);
+
+        // Clean up after test
+        new File("savegame_test.ser").delete();
 
     }
 

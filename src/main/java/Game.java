@@ -267,7 +267,7 @@ public class Game implements Serializable {
                 //Update player stats here
                 guessCount++;
                 player.incrementTotalGuesses();
-                checkGuess(position, cryptogram);
+                checkGuess(cryptogram, letter);
                 player.updateAccuracy();
             }
         }
@@ -318,7 +318,7 @@ public class Game implements Serializable {
                 guessCount++;
                 //Update player stats here
                 player.incrementTotalGuesses();
-                checkGuess(position, cryptogram);
+                checkGuess(cryptogram, letter);
                 player.updateAccuracy();
             }
         }
@@ -375,9 +375,13 @@ public class Game implements Serializable {
         }
     }
 
-    public void checkGuess(int position, Cryptogram cryptogram) {
-        if (playerGameMapping.get(position).charAt(0) == cryptogram.getPhrase().charAt(position)) {
-            player.incrementCorrectGuesses();
+    public void checkGuess(Cryptogram cryptogram, char letter) {
+        String phrase = cryptogram.getPhrase();
+        for (int i = 0; i < phrase.length(); i++) {
+            if (Character.toUpperCase(phrase.charAt(i)) == Character.toUpperCase(letter)) {
+                player.incrementCorrectGuesses();
+                return; // only count once per guess, not per occurrence
+            }
         }
     }
 
@@ -444,11 +448,17 @@ public class Game implements Serializable {
 
     // public void generateCryptogram() {}
 
-    public void showSolution() {}
+    public void showSolution() {
+        System.out.println("\u001b[31mNot yet implemented!");
+    }
 
-    public void viewFrequencies() {}
+    public void viewFrequencies() {
+        System.out.println("\u001b[31mNot yet implemented!");
+    }
 
-    public void getHint () {}
+    public void getHint() {
+        System.out.println("\u001b[31mNot yet implemented!");
+    }
 
     public String getCryptoType() {
         return crypto_type;
