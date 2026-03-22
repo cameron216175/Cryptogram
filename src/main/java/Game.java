@@ -28,24 +28,6 @@ public class Game implements Serializable {
         }
     }
 
-    public void getHint () {}
-
-    public static Player loadPlayer(Players players) {
-
-        Scanner sc = new Scanner(System.in);
-        printLineBreak("Please enter your usename");
-        System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
-        String input = sc.nextLine();
-        Player player = new Player(input);
-        if (players.findPlayer(player) == null) {
-            players.addPlayer(player);
-            System.out.print("\u001b[35mUser not found creating account\u001b[0m\n");
-            return player;
-        }
-        System.out.print("\u001b[35mUser found creating account\u001b[0m\n");
-        return players.getPlayer(player.getUsername());
-    }
-
     public void playGame() {
         // Cryptogram game loop
         boolean exit = false;
@@ -66,10 +48,10 @@ public class Game implements Serializable {
             switch (inputs[0]) {
                 case "undo" -> {
                     if (inputs.length > 2) {
-                        System.out.println("Too many arguments!");
+                        System.out.println("\u001B[31mToo many arguments!");
                         continue;
                     } else if (inputs.length < 2) {
-                        System.out.println("Too few arguments!");
+                        System.out.println("\u001B[31mToo few arguments!");
                         continue;
                     }
 
@@ -79,18 +61,6 @@ public class Game implements Serializable {
                 case "save" -> {
                     saveGame();
                 }
-                case "load" -> {
-
-                    Game loadedGame = Game.loadGame(this.player);
-
-                    if (loadedGame != null) {
-
-                        loadedGame.playGame();
-
-                        return;
-
-                    }
-                }
                 case "exit" -> {
                     System.out.println("\u001b[35mExiting Game...\u001b[0m");
                     exit = true;
@@ -98,10 +68,10 @@ public class Game implements Serializable {
                 case "help" -> help();
                 case "enter" -> {
                     if (inputs.length > 3) {
-                        System.out.println("Too many arguments!");
+                        System.out.println("\u001B[31mToo many arguments!");
                         continue;
                     } else if (inputs.length < 3) {
-                        System.out.println("Too few arguments!");
+                        System.out.println("\u001B[31mToo few arguments!");
                         continue;
                     }
                     //Take letter from the front of the string
@@ -114,7 +84,7 @@ public class Game implements Serializable {
                     exit = checkCompletion(completion);
                 }
                 default -> {
-                    System.out.println("Invalid input!");
+                    System.out.println("\u001B[31mInvalid input!");
                     continue;
                 }
             }
@@ -219,14 +189,14 @@ public class Game implements Serializable {
 
         //Print error and return if guess isn't a letter
         if(!Character.isLetter(letter)){
-            System.out.println("Invalid input, " + letter + " is not a letter!\n");
+            System.out.println("\u001b[31mInvalid input, \u001b[34m" + letter + "\u001b[31m is not a letter!\n");
             return "Error";
         }
 
         //Print error and return if player has already guessed the letter
         for (String str : playerGameMapping) {
             if (str.charAt(0) == Character.toLowerCase(letter) || str.charAt(0) == Character.toUpperCase(letter)) {
-                System.out.println("\u001b[31mError, you have already guessed " + letter + " as an answer!");
+                System.out.println("\u001b[31mError, you have already guessed \u001b[34m" + letter + "\u001b[31m as an answer!");
                 return "Error";
             }
         }
@@ -271,11 +241,12 @@ public class Game implements Serializable {
                         //Allow player to override their guess
                         else {
                             if(!alreadyOverriding) {
-                                System.out.println("You have already mapped a guess to " + encrypted_char + "!\nPlease enter '1' to override it!\n");
+                                System.out.println("\u001b[31mYou have already mapped a guess to \u001b[34m" + encrypted_char + "\u001b[31m!\nPlease enter '1' to override it!\n");
+                                System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
                                 String input = sc.nextLine();
 
                                 if(!input.equals("1")){
-                                    System.out.println("Not Overriding!\n");
+                                    System.out.println("\u001b[31mNot Overriding!\n");
                                     return "Incomplete";
                                 }
                                 else{
@@ -289,7 +260,7 @@ public class Game implements Serializable {
             }
             //Print error if encrypted char was not in the encrypted phrase
             if(!found) {
-                System.out.println("\u001b[31mError, " + encrypted_char + " was not found within the cryptogram!");
+                System.out.println("\u001b[31mError, \u001b[34m" + encrypted_char + "\u001b[31m was not found within the cryptogram!");
                 return "Error";
 
             } else {
@@ -323,11 +294,12 @@ public class Game implements Serializable {
                     //Allow player to override their guess
                      else {
                         if(!alreadyOverriding) {
-                            System.out.println("You have already mapped a guess to " + encrypted_guess.substring(0, encrypted_guess.length() - 1) + "!\nPlease enter 1 to override it!\n");
+                            System.out.println("\u001b[31mYou have already mapped a guess to \u001b[34m" + encrypted_guess.substring(0, encrypted_guess.length() - 1) + "\u001b[31m!\nPlease enter 1 to override it!\n");
+                            System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
                             String input = sc.nextLine();
 
                             if(!input.equals("1")){
-                                System.out.println("Not overriding!");
+                                System.out.println("\u001b[31mNot overriding!");
                                 return "Incomplete";
                             }
                             else {
@@ -340,7 +312,7 @@ public class Game implements Serializable {
             }
             //Print error if the encrypted number was not found in the encrypted phrase
             if(!found) {
-                System.out.println("\u001b[31mError, " + encrypted_guess.substring(0, encrypted_guess.length()-1) + " was not found within the cryptogram!");
+                System.out.println("\u001b[31mError, \u001b[34m" + encrypted_guess.substring(0, encrypted_guess.length()-1) + "\u001b[31m was not found within the cryptogram!");
                 return "Error";
             } else {
                 guessCount++;
@@ -378,7 +350,7 @@ public class Game implements Serializable {
 
     public void undoLetter(Cryptogram cryptogram, String undoLetter) {
         if (guessCount == 0) {
-            System.out.println("\u001b[35mNothing to undo!\u001b[0m\n");
+            System.out.println("\u001b[31mNothing to undo!\u001b[0m\n");
             return;
         }
         
@@ -398,12 +370,10 @@ public class Game implements Serializable {
             guessCount--;
         }
         else{
-            System.out.println("\u001b[35mNo guess found for " + undoLetter + "!\u001b[0m");
+            System.out.println("\u001b[31mNo guess found for " + undoLetter + "!\u001b[0m");
 
         }
     }
-
-    public void viewFrequencies() {}
 
     public void checkGuess(int position, Cryptogram cryptogram) {
         if (playerGameMapping.get(position).charAt(0) == cryptogram.getPhrase().charAt(position)) {
@@ -411,18 +381,16 @@ public class Game implements Serializable {
         }
     }
 
-
-
     //SAVE GAME
     public void saveGame() {
 
         String filename = "savegame_" + player.getUsername() + ".ser";
-
         File file = new File(filename);
 
         // Check if save file already exists and prompt for overwrite
         if (file.exists()) {
             System.out.println("\u001b[34mA saved game already exists. Enter '1' to overwrite it, anything else to cancel:");
+            System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
             Scanner sc = new Scanner(System.in);
             String input = sc.nextLine();
             if (!input.equals("1")) {
@@ -432,15 +400,10 @@ public class Game implements Serializable {
         }
 
         try {
-
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename));
-
             out.writeObject(this);
-
             out.close();
-
             System.out.println("Game saved...");
-
         } catch (Exception e) {
 
             System.out.println("Error saving game: " + e.getMessage());
@@ -453,33 +416,20 @@ public class Game implements Serializable {
     public static Game loadGame(Player player) {
 
         String filename = "savegame_" + player.getUsername() + ".ser";
-
         try {
-
             ObjectInputStream in = new ObjectInputStream(new FileInputStream(filename));
-
             Game game = (Game) in.readObject();
-
             //Cryptogram cryptogram = (Cryptogram) in.readObject();
-
             //this.playerGameMapping = loadedGame.playerGameMapping;
             //this.guessCount = loadedGame.guessCount;
             //this.crypto_type = loadedGame.crypto_type;
-
             in.close();
-
             System.out.println("Game loaded...");
-
             //return cryptogram;
-
             return game;
-
         } catch (Exception e) {
-
-            System.out.println("Error loading game: " + e.getMessage());
-
+            System.out.println("\u001b[31mError loading game: " + e.getMessage());
             return null;
-
         }
 
     }
@@ -489,14 +439,16 @@ public class Game implements Serializable {
     }
 
     public ArrayList<String> getPlayerGameMapping() {
-
         return playerGameMapping;
-
     }    
 
     // public void generateCryptogram() {}
 
     public void showSolution() {}
+
+    public void viewFrequencies() {}
+
+    public void getHint () {}
 
     public String getCryptoType() {
         return crypto_type;

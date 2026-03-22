@@ -9,7 +9,7 @@ import java.nio.file.*;
 
 public class Players {
     private ArrayList<Player> allPlayers = new ArrayList<Player>();
-    private String playersFile;
+    private String playersFile = "src/playerData.csv";
 
     public Players() {
         readPlayers();
@@ -26,7 +26,7 @@ public class Players {
 
     public boolean savePlayers() throws IOException {
         try {
-            FileWriter myWriter = new FileWriter("src/playerData.csv");
+            FileWriter myWriter = new FileWriter(playersFile);
             for (Player player : allPlayers) {
                 myWriter.write(
                         player.getUsername() + "," +
@@ -79,7 +79,7 @@ public class Players {
     }
 
     public void readPlayers() {
-        File players = new File("src/playerData.csv");
+        File players = new File(playersFile);
 
         try (Scanner reader = new Scanner(players)) {
             while (reader.hasNextLine()) {
@@ -130,7 +130,7 @@ public class Players {
     }
 
     public void clearFile() throws FileNotFoundException {
-        PrintWriter writer = new PrintWriter("src/playerData.csv");
+        PrintWriter writer = new PrintWriter(playersFile);
         writer.print("");
         writer.close();
     }
