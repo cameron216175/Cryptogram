@@ -418,6 +418,19 @@ public class Game implements Serializable {
 
         String filename = "savegame_" + player.getUsername() + ".ser";
 
+        File file = new File(filename);
+
+        // Check if save file already exists and prompt for overwrite
+        if (file.exists()) {
+            System.out.println("\u001b[34mA saved game already exists. Enter '1' to overwrite it, anything else to cancel:");
+            Scanner sc = new Scanner(System.in);
+            String input = sc.nextLine();
+            if (!input.equals("1")) {
+                System.out.println("\u001b[34mSave cancelled.");
+                return;
+            }
+        }
+
         try {
 
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename));

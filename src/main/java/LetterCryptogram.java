@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 public class LetterCryptogram extends Cryptogram implements Serializable {
 
-    protected char[] encrypted_values = new char[26];
+    public char[] encrypted_values = new char[26];
 
     public LetterCryptogram() {
 
