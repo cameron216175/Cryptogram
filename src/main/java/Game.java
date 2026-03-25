@@ -1,8 +1,10 @@
 package src.main.java;
 
 import java.io.*;
+import java.nio.file.FileSystemNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Game implements Serializable {
@@ -82,6 +84,12 @@ public class Game implements Serializable {
                     String completion = enterLetter(this.cryptogram, letter, encrypted_guess);
 
                     exit = checkCompletion(completion);
+                }
+                case "hint" -> {
+                    getHint();
+                }
+                case "solution" -> {
+                    showSolution();
                 }
                 default -> {
                     System.out.println("\u001B[31mInvalid input!");
@@ -172,7 +180,11 @@ public class Game implements Serializable {
         System.out.print  ("        \u001b[35m               ║");
         System.out.println("\u001b[34m ◈ enter <a> <c/14> - type enter the char and the indice \u001b[35m║");
         System.out.print  ("        \u001b[35m               ║");
+        System.out.println("\u001b[34m ◈ hint - Gives a letter in the correct place            \u001b[35m║");
+        System.out.print  ("        \u001b[35m               ║");
         System.out.println("\u001b[34m ◈ save - saves the current cryptogram                   \u001b[35m║");
+        System.out.print  ("        \u001b[35m               ║");
+        System.out.println("\u001b[34m ◈ solution - reveals the entire cryptogram solution     \u001b[35m║");
         System.out.println("        \u001b[35m               ╚═════════════════════════════════════════════════════════╝");
         System.out.println("\u001b[0m");
     }
@@ -449,7 +461,9 @@ public class Game implements Serializable {
     // public void generateCryptogram() {}
 
     public void showSolution() {
-        System.out.println("\u001b[31mNot yet implemented!");
+        System.out.println("-----Solution is:-----");
+        System.out.println(cryptogram.getPhrase());
+        System.out.println("-------------------");
     }
 
     public void viewFrequencies() {
@@ -457,7 +471,50 @@ public class Game implements Serializable {
     }
 
     public void getHint() {
-        System.out.println("\u001b[31mNot yet implemented!");
+
+        String phrase = cryptogram.getPhrase();
+
+        ArrayList<Character> unguessed = new ArrayList<>();
+        for (int i = 0; i < phrase.length(); i++) {
+            char c = Character.toUpperCase(phrase.charAt(i));
+            if (playerGameMapping.get(i).equals("- ") && phrase.charAt(i) != ' ') {
+                unguessed.add(c);
+            }
+        }
+
+        // Checks if the user can actually be given a hint
+        if(unguessed.isEmpty()){
+            System.out.println("No more hints were found.");
+            return;
+        } else if (unguessed.size() == 1) {
+            System.out.println("There is only one letter left, you are not allowed to use anymore hints");
+            return;
+        }
+
+        // System chooses random letter from unguessed letters
+        Random rand = new Random();
+        char hintLetter = unguessed.get(rand.nextInt(unguessed.size()));
+
+        // Remove any incorrect guesses of a letter if it's the hint letter
+        for (int i = 0; i < playerGameMapping.size(); i++) {
+            String s = playerGameMapping.get(i);
+            if (s.charAt(0) != '-' && Character.toUpperCase(s.charAt(0)) == Character.toUpperCase(hintLetter)){
+                playerGameMapping.set(i, "- ");
+            }
+        }
+
+        // Reveal all positions of the hint letter
+        for (int i = 0; i < phrase.length(); i++) {
+            if (Character.toUpperCase(phrase.charAt(i)) == Character.toUpperCase(hintLetter)) {
+                playerGameMapping.set(i, phrase.charAt(i) + " ");
+            }
+        }
+
+        player.incrementTotalGuesses();
+        player.incrementCorrectGuesses();
+        player.updateAccuracy();
+
+        System.out.println("Hint: Here are all the positions for the letter " + hintLetter);
     }
 
     public String getCryptoType() {
