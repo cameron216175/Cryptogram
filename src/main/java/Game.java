@@ -2,10 +2,7 @@ package src.main.java;
 
 import java.io.*;
 import java.nio.file.FileSystemNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Game implements Serializable {
     private Cryptogram cryptogram;
@@ -467,8 +464,36 @@ public class Game implements Serializable {
     }
 
     public void viewFrequencies() {
-        System.out.println("\u001b[31mNot yet implemented!");
+       HashMap <Character, Double> englishFrequencies = new HashMap<>();
+       englishFrequencies.put('E', 12.02);
+       englishFrequencies.put('T', 9.10);
+       englishFrequencies.put('A', 8.12);
+       englishFrequencies.put('O', 7.68);
+       englishFrequencies.put('I', 7.31);
+       englishFrequencies.put('N', 6.95);
+       englishFrequencies.put('S', 6.28);
+       englishFrequencies.put('R', 6.02);
+       englishFrequencies.put('H', 5.92);
+       englishFrequencies.put('D', 4.32);
+       englishFrequencies.put('L', 3.98);
+       englishFrequencies.put('U', 2.88);
+       englishFrequencies.put('C', 2.71);
+       englishFrequencies.put('M', 2.61);
+       englishFrequencies.put('F', 2.30);
+       englishFrequencies.put('Y', 2.11);
+       englishFrequencies.put('W', 2.09);
+       englishFrequencies.put('G', 2.03);
+       englishFrequencies.put('P', 1.82);
+       englishFrequencies.put('B', 1.49);
+       englishFrequencies.put('V', 1.11);
+       englishFrequencies.put('K', 0.69);
+       englishFrequencies.put('X', 0.17);
+       englishFrequencies.put('Q', 0.11);
+       englishFrequencies.put('J', 0.10);
+       englishFrequencies.put('Z', 0.07);
     }
+    HashMap<Character,Integer> cryptoFrequencies = cryptogram.getFrequencies();
+    
 
     public void getHint() {
 
