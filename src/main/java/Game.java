@@ -454,10 +454,14 @@ public class Game implements Serializable {
 
     // public void generateCryptogram() {}
 
+    public String getSolution() {
+        return cryptogram.getPhrase();
+    }
+
     public void showSolution() {
         System.out.println("-----Solution is:-----");
-        System.out.println(cryptogram.getPhrase());
-        System.out.println("-------------------");
+        System.out.println(getSolution());
+        System.out.println("----------------------");
     }
 
     public void viewFrequencies() {
