@@ -462,42 +462,30 @@ public class Game implements Serializable {
 
     public void viewFrequencies() {
         HashMap<Character, Double> englishFrequencies = new HashMap<>();
-        englishFrequencies.put('E', 12.02);
-        englishFrequencies.put('T', 9.10);
-        englishFrequencies.put('A', 8.12);
-        englishFrequencies.put('O', 7.68);
-        englishFrequencies.put('I', 7.31);
-        englishFrequencies.put('N', 6.95);
-        englishFrequencies.put('S', 6.28);
-        englishFrequencies.put('R', 6.02);
-        englishFrequencies.put('H', 5.92);
-        englishFrequencies.put('D', 4.32);
-        englishFrequencies.put('L', 3.98);
-        englishFrequencies.put('U', 2.88);
-        englishFrequencies.put('C', 2.71);
-        englishFrequencies.put('M', 2.61);
-        englishFrequencies.put('F', 2.30);
-        englishFrequencies.put('Y', 2.11);
-        englishFrequencies.put('W', 2.09);
-        englishFrequencies.put('G', 2.03);
-        englishFrequencies.put('P', 1.82);
-        englishFrequencies.put('B', 1.49);
-        englishFrequencies.put('V', 1.11);
-        englishFrequencies.put('K', 0.69);
-        englishFrequencies.put('X', 0.17);
-        englishFrequencies.put('Q', 0.11);
-        englishFrequencies.put('J', 0.10);
-        englishFrequencies.put('Z', 0.07);
+        //frequency of letters in the english language just used cornell website table for values
+        englishFrequencies.put('E', 12.02);englishFrequencies.put('T', 9.10);englishFrequencies.put('A', 8.12);
+        englishFrequencies.put('O', 7.68);englishFrequencies.put('I', 7.31);englishFrequencies.put('N', 6.95);
+        englishFrequencies.put('S', 6.28);englishFrequencies.put('R', 6.02);englishFrequencies.put('H', 5.92);
+        englishFrequencies.put('D', 4.32);englishFrequencies.put('L', 3.98);englishFrequencies.put('U', 2.88);
+        englishFrequencies.put('C', 2.71);englishFrequencies.put('M', 2.61);englishFrequencies.put('F', 2.30);
+        englishFrequencies.put('Y', 2.11);englishFrequencies.put('W', 2.09);englishFrequencies.put('G', 2.03);
+        englishFrequencies.put('P', 1.82);englishFrequencies.put('B', 1.49);englishFrequencies.put('V', 1.11);
+        englishFrequencies.put('K', 0.69);englishFrequencies.put('X', 0.17);englishFrequencies.put('Q', 0.11);
+        englishFrequencies.put('J', 0.10);englishFrequencies.put('Z', 0.07);
 
         HashMap<Character, Integer> cryptoFrequencies = cryptogram.getFrequencies();
-
         int total = 0;
         for (int count : cryptoFrequencies.values()) {
             total += count;
         }
+        System.out.println("Letter  | Cryptogram % | English %");
         for (char c = 'A'; c <= 'Z'; c++) {
+            int count = 0;
             if (cryptoFrequencies.containsKey(c)) {
-                System.out.println(c + " " + cryptoFrequencies.get(c) + " " + englishFrequencies.get(c) + "% ");
+                count = cryptoFrequencies.get(c);
+                double cryptogramPercentage = count * 100.0 / total;
+                double englishFrequenciesPercentage = englishFrequencies.get(c);
+                System.out.println(c + " | " + cryptogramPercentage + " % | " + englishFrequenciesPercentage + "% ");
             }
         }
         }
