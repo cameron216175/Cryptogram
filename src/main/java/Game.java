@@ -2,10 +2,8 @@ package src.main.java;
 
 import java.io.*;
 import java.nio.file.FileSystemNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
+
 
 public class Game implements Serializable {
     private Cryptogram cryptogram;
@@ -15,7 +13,6 @@ public class Game implements Serializable {
     private int guessCount = 0;
 
 
-
     public Game(Player p, String cryptType) {
         this.player = p;
         this.cryptogram = this.generateCryptogram(cryptType);
@@ -23,8 +20,8 @@ public class Game implements Serializable {
 
         this.playerGameMapping.addAll(Arrays.asList(cryptogram.getEncryptedPhrase()));
 
-        for(int i = 0; i < this.playerGameMapping.size(); i++) {
-            if(this.playerGameMapping.get(i).charAt(0) != ' '){
+        for (int i = 0; i < this.playerGameMapping.size(); i++) {
+            if (this.playerGameMapping.get(i).charAt(0) != ' ') {
                 this.playerGameMapping.set(i, "- ");
             }
         }
@@ -35,7 +32,7 @@ public class Game implements Serializable {
         boolean exit = false;
 
         //Loop until player completes game
-        while(!exit) {
+        while (!exit) {
 
             System.out.print("\n");
             printCryptogram(this.cryptogram);
@@ -91,6 +88,9 @@ public class Game implements Serializable {
                 case "solution" -> {
                     showSolution();
                 }
+                case "frequency"->{
+                    viewFrequencies();
+                }
                 default -> {
                     System.out.println("\u001B[31mInvalid input!");
                     continue;
@@ -110,29 +110,29 @@ public class Game implements Serializable {
 
 
     public static void printLineBreak(String name) {
-        System.out.println("\n\u001b[38;5;214m╠═════════════════════════════════════╡ "+ name +" ╞═════════════════════════════════════╣\u001b[0m");
+        System.out.println("\n\u001b[38;5;214m╠═════════════════════════════════════╡ " + name + " ╞═════════════════════════════════════╣\u001b[0m");
     }
 
     public void printCryptogram(Cryptogram cryptogram) {
-       String[] encrypted = cryptogram.getEncryptedPhrase();
+        String[] encrypted = cryptogram.getEncryptedPhrase();
 
-       printLineBreak("Cryptogram");
-       for (String s : encrypted) System.out.printf("%-3s", s);
-       System.out.println();
+        printLineBreak("Cryptogram");
+        for (String s : encrypted) System.out.printf("%-3s", s);
+        System.out.println();
 
-       if (this.playerGameMapping != null) {
-           for (String s : this.playerGameMapping) {
-               if (s.equals("- ")) {
-                   System.out.printf("%-3s", s);
-               } else {
-                   System.out.printf("\u001b[32m%-3s\u001b[0m", s);
-               }
+        if (this.playerGameMapping != null) {
+            for (String s : this.playerGameMapping) {
+                if (s.equals("- ")) {
+                    System.out.printf("%-3s", s);
+                } else {
+                    System.out.printf("\u001b[32m%-3s\u001b[0m", s);
+                }
 
-           }
-           System.out.println();
-       } else {
-           for (String s: encrypted) System.out.println("&-3s");
-       }
+            }
+            System.out.println();
+        } else {
+            for (String s : encrypted) System.out.println("&-3s");
+        }
     }
 
 
@@ -140,27 +140,22 @@ public class Game implements Serializable {
         if (input.equals("0")) {
             crypto_type = "numbers";
             return new NumberCryptogram();
-        }
-
-        else if (input.equals("1")) {
+        } else if (input.equals("1")) {
             crypto_type = "letters";
             return new LetterCryptogram();
-        }
-
-        else{
+        } else {
             System.out.println("Invalid input\n");
             return null;
         }
     }
 
-    public String trimInput (String string) {
+    public String trimInput(String string) {
         //Remove any whitespace from players guess
         int i = 0;
-        for(char c : string.toCharArray()) {
-            if(c == ' '){
+        for (char c : string.toCharArray()) {
+            if (c == ' ') {
                 i++;
-            }
-            else{
+            } else {
                 string = string.substring(i);
                 break;
             }
@@ -171,19 +166,21 @@ public class Game implements Serializable {
     public static void help() {
         printLineBreak("Commands");
         System.out.println("        \u001b[35m               ╔═════════════════════════════════════════════════════════╗");
-        System.out.print  ("        \u001b[35m╔══════════════╣");
+        System.out.print("        \u001b[35m╔══════════════╣");
         System.out.println("\u001b[34m ◈ help - lists commands                                 \u001b[35m║");
-        System.out.print  ("        \u001b[35m║  ◈  HELP  ◈  ║");
+        System.out.print("        \u001b[35m║  ◈  HELP  ◈  ║");
         System.out.println("\u001b[34m ◈ exit - quits current cryptogram                       \u001b[35m║");
-        System.out.print  ("        \u001b[35m╚══════════════╣");
+        System.out.print("        \u001b[35m╚══════════════╣");
         System.out.println("\u001b[34m ◈ undo <a/14> - type undo and the indice                \u001b[35m║");
-        System.out.print  ("        \u001b[35m               ║");
+        System.out.print("        \u001b[35m               ║");
         System.out.println("\u001b[34m ◈ enter <a> <c/14> - type enter the char and the indice \u001b[35m║");
-        System.out.print  ("        \u001b[35m               ║");
+        System.out.print("        \u001b[35m               ║");
         System.out.println("\u001b[34m ◈ hint - Gives a letter in the correct place            \u001b[35m║");
-        System.out.print  ("        \u001b[35m               ║");
+        System.out.print("        \u001b[35m               ║");
         System.out.println("\u001b[34m ◈ save - saves the current cryptogram                   \u001b[35m║");
-        System.out.print  ("        \u001b[35m               ║");
+        System.out.print("        \u001b[35m               ║");
+        System.out.println("\u001b[34m ◈ frequency - view letter frequencies                   \u001b[35m║");
+        System.out.print("        \u001b[35m               ║");
         System.out.println("\u001b[34m ◈ solution - reveals the entire cryptogram solution     \u001b[35m║");
         System.out.println("        \u001b[35m               ╚═════════════════════════════════════════════════════════╝");
         System.out.println("\u001b[0m");
@@ -200,7 +197,7 @@ public class Game implements Serializable {
         Scanner sc = new Scanner(System.in);
 
         //Print error and return if guess isn't a letter
-        if(!Character.isLetter(letter)){
+        if (!Character.isLetter(letter)) {
             System.out.println("\u001b[31mInvalid input, \u001b[34m" + letter + "\u001b[31m is not a letter!\n");
             return "Error";
         }
@@ -221,7 +218,7 @@ public class Game implements Serializable {
         String[] encrypted_phrase = cryptogram.getEncryptedPhrase();
 
         //Only run if a letters cryptogram was made
-        if(crypto_type.equals("letters")) {
+        if (crypto_type.equals("letters")) {
             //Get the first char from user input string
             char encrypted_char = encrypted_guess.charAt(0);
 
@@ -252,16 +249,15 @@ public class Game implements Serializable {
 
                         //Allow player to override their guess
                         else {
-                            if(!alreadyOverriding) {
+                            if (!alreadyOverriding) {
                                 System.out.println("\u001b[31mYou have already mapped a guess to \u001b[34m" + encrypted_char + "\u001b[31m!\nPlease enter '1' to override it!\n");
                                 System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
                                 String input = sc.nextLine();
 
-                                if(!input.equals("1")){
+                                if (!input.equals("1")) {
                                     System.out.println("\u001b[31mNot Overriding!\n");
                                     return "Incomplete";
-                                }
-                                else{
+                                } else {
                                     alreadyOverriding = true;
                                 }
                             }
@@ -271,7 +267,7 @@ public class Game implements Serializable {
                 }
             }
             //Print error if encrypted char was not in the encrypted phrase
-            if(!found) {
+            if (!found) {
                 System.out.println("\u001b[31mError, \u001b[34m" + encrypted_char + "\u001b[31m was not found within the cryptogram!");
                 return "Error";
 
@@ -284,7 +280,7 @@ public class Game implements Serializable {
             }
         }
         //Only run if a numbers cryptogram was made
-        else if(crypto_type.equals("numbers")) {
+        else if (crypto_type.equals("numbers")) {
             //Append space to end of encrypted guess for easier comparisons
             encrypted_guess = encrypted_guess + " ";
 
@@ -294,27 +290,26 @@ public class Game implements Serializable {
                 String num = encrypted_phrase[i];
 
                 //If match is found
-                if(num.equals(encrypted_guess)) {
+                if (num.equals(encrypted_guess)) {
                     found = true;
 
                     //Store letter in playerGameMapping if guess has not already been made there
-                    if(playerGameMapping.get(i).equals("- ")) {
+                    if (playerGameMapping.get(i).equals("- ")) {
                         playerGameMapping.set(i, letter + " ");
                         position = i;
                     }
 
                     //Allow player to override their guess
-                     else {
-                        if(!alreadyOverriding) {
+                    else {
+                        if (!alreadyOverriding) {
                             System.out.println("\u001b[31mYou have already mapped a guess to \u001b[34m" + encrypted_guess.substring(0, encrypted_guess.length() - 1) + "\u001b[31m!\nPlease enter 1 to override it!\n");
                             System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
                             String input = sc.nextLine();
 
-                            if(!input.equals("1")){
+                            if (!input.equals("1")) {
                                 System.out.println("\u001b[31mNot overriding!");
                                 return "Incomplete";
-                            }
-                            else {
+                            } else {
                                 alreadyOverriding = true;
                             }
                         }
@@ -323,8 +318,8 @@ public class Game implements Serializable {
                 }
             }
             //Print error if the encrypted number was not found in the encrypted phrase
-            if(!found) {
-                System.out.println("\u001b[31mError, \u001b[34m" + encrypted_guess.substring(0, encrypted_guess.length()-1) + "\u001b[31m was not found within the cryptogram!");
+            if (!found) {
+                System.out.println("\u001b[31mError, \u001b[34m" + encrypted_guess.substring(0, encrypted_guess.length() - 1) + "\u001b[31m was not found within the cryptogram!");
                 return "Error";
             } else {
                 guessCount++;
@@ -343,14 +338,14 @@ public class Game implements Serializable {
             }
         }
         //Check if user has successfully completed cryptogram
-        if(isFull){
+        if (isFull) {
             int x = 0;
-            for(String str : playerGameMapping){
-                if(str.charAt(0) == ' '){
+            for (String str : playerGameMapping) {
+                if (str.charAt(0) == ' ') {
                     x++;
                     continue;
                 }
-                if(Character.toLowerCase(str.charAt(0)) != Character.toLowerCase(cryptogram.getPhrase().charAt(x))){
+                if (Character.toLowerCase(str.charAt(0)) != Character.toLowerCase(cryptogram.getPhrase().charAt(x))) {
                     return "Incorrect";
                 }
                 x++;
@@ -365,7 +360,7 @@ public class Game implements Serializable {
             System.out.println("\u001b[31mNothing to undo!\u001b[0m\n");
             return;
         }
-        
+
         boolean found = false;
 
         for (int i = 0; i < cryptogram.getEncryptedPhrase().length; i++) {
@@ -377,11 +372,10 @@ public class Game implements Serializable {
             }
         }
 
-        if(found){
+        if (found) {
             System.out.println("\u001b[35mUndid guess for: \u001b[34m" + undoLetter + "\u001b[0m");
             guessCount--;
-        }
-        else{
+        } else {
             System.out.println("\u001b[31mNo guess found for " + undoLetter + "!\u001b[0m");
 
         }
@@ -456,7 +450,7 @@ public class Game implements Serializable {
 
     public ArrayList<String> getPlayerGameMapping() {
         return playerGameMapping;
-    }    
+    }
 
     // public void generateCryptogram() {}
 
@@ -467,8 +461,36 @@ public class Game implements Serializable {
     }
 
     public void viewFrequencies() {
-        System.out.println("\u001b[31mNot yet implemented!");
-    }
+        HashMap<Character, Double> englishFrequencies = new HashMap<>();
+        //frequency of letters in the english language just used cornell website table for values
+        englishFrequencies.put('E', 12.02);englishFrequencies.put('T', 9.10);englishFrequencies.put('A', 8.12);
+        englishFrequencies.put('O', 7.68);englishFrequencies.put('I', 7.31);englishFrequencies.put('N', 6.95);
+        englishFrequencies.put('S', 6.28);englishFrequencies.put('R', 6.02);englishFrequencies.put('H', 5.92);
+        englishFrequencies.put('D', 4.32);englishFrequencies.put('L', 3.98);englishFrequencies.put('U', 2.88);
+        englishFrequencies.put('C', 2.71);englishFrequencies.put('M', 2.61);englishFrequencies.put('F', 2.30);
+        englishFrequencies.put('Y', 2.11);englishFrequencies.put('W', 2.09);englishFrequencies.put('G', 2.03);
+        englishFrequencies.put('P', 1.82);englishFrequencies.put('B', 1.49);englishFrequencies.put('V', 1.11);
+        englishFrequencies.put('K', 0.69);englishFrequencies.put('X', 0.17);englishFrequencies.put('Q', 0.11);
+        englishFrequencies.put('J', 0.10);englishFrequencies.put('Z', 0.07);
+
+        HashMap<Character, Integer> cryptoFrequencies = cryptogram.getFrequencies();
+        int total = 0;
+        for (int count : cryptoFrequencies.values()) {
+            total += count;
+        }
+        System.out.println("Letter  | Cryptogram % | English %");
+        for (char c = 'A'; c <= 'Z'; c++) {
+            int count = 0;
+            if (cryptoFrequencies.containsKey(c)) {
+                count = cryptoFrequencies.get(c);
+                double cryptogramPercentage = count * 100.0 / total;
+                double englishFrequenciesPercentage = englishFrequencies.get(c);
+                System.out.println(c + " | " + cryptogramPercentage + " % | " + englishFrequenciesPercentage + "% ");
+            }
+        }
+        }
+
+
 
     public void getHint() {
 
