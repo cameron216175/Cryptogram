@@ -1,6 +1,7 @@
 package src.main.java;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -55,7 +56,13 @@ public class Main {
                         loadedGame.playGame();
                     }
 
+                }
 
+                case "top10" -> {
+                    printTopTen(players);
+                    System.out.println("\u001b[35mto quit type anything");
+                    System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
+                    String topTen = sc.nextLine();
                 }
                 default -> {
                     System.out.println("\u001B[31mInvalid input!");
@@ -104,6 +111,8 @@ public class Main {
         System.out.print  ("        \u001b[35m╚══════════════╣");
         System.out.println("\u001b[34m ◈ stats - lists player stats           \u001b[35m║");
         System.out.print  ("        \u001b[35m               ║");
+        System.out.println("\u001b[34m ◈ top10 - view top 10 players          \u001b[35m║");
+        System.out.print  ("        \u001b[35m               ║");
         System.out.println("\u001b[34m ◈ quit - closes game                   \u001b[35m║");
         System.out.println("        \u001b[35m               ╚════════════════════════════════════════╝");
         System.out.println("\u001b[0m");
@@ -143,6 +152,20 @@ public class Main {
         }
         System.out.print("\u001b[35mUser found, logging in. .\u001b[0m\n");
         return players.getPlayer(player.getUsername());
+    }
+    public static void printTopTen(Players players) {
+        List<Player> topPlayer = players.getTop10();
+        if (topPlayer.isEmpty()) {
+            System.out.println("no stats");
+        }
+        for (int i = 0; i<10; i++) {
+            if (i< topPlayer.size()) {
+                Player p = topPlayer.get(i);
+                System.out.println((i+1) + " " + p.getUsername()+ " " + p.getNumCryptogramsCompleted() + " completed");
+            } else{
+                System.out.println("no stats");
+            }
+        }
     }
 
 }

@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.nio.file.*;
 
 
 public class Players {
@@ -31,8 +30,8 @@ public class Players {
                 myWriter.write(
                         player.getUsername() + "," +
                                 player.getTotalGuesses() + "," +
-                                player.getNumCryptogramsPlayed() + "," +
                                 player.getNumCryptogramsCompleted() + "," +
+                                player.getNumCryptogramsPlayed() + "," +
                                 player.getAccuracy() + "," +
                                 player.getCorrectGuesses()+ "\n");
             }
@@ -127,6 +126,32 @@ public class Players {
             stats.add(Player.getNumCryptogramsCompleted());
         }
         return stats;
+    }
+
+    public List<Player> getTop10() {
+        List<Player> top10 = new ArrayList<>();
+        for (Player player : allPlayers) {
+            if (player.getNumCryptogramsPlayed() > 0) {
+                top10.add(player);
+            }
+        }
+        for (int i = 0; i < top10.size(); i++) {
+            for (int j = 0; j < top10.size() - 1 - i; j++) {
+                int PlayerACompleted = top10.get(j).getNumCryptogramsCompleted();
+                int PlayerBCompleted = top10.get(j+1).getNumCryptogramsCompleted();
+                if (PlayerACompleted < PlayerBCompleted) {
+                    Player temp = top10.get(j);
+                    top10.set(j, top10.get(j + 1));
+                    top10.set(j + 1, temp);
+                }
+            }
+        }
+        List<Player> top10list = new ArrayList<>();
+        for (int i = 0; i < 10 && i < top10.size(); i++) {
+            top10list.add(top10.get(i));
+        }
+        return top10list;
+
     }
 
     public void clearFile() throws FileNotFoundException {
