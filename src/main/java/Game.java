@@ -280,7 +280,7 @@ public class Game implements Serializable {
                 //Update player stats here
                 guessCount++;
                 player.incrementTotalGuesses();
-                checkGuess(cryptogram, letter);
+                checkGuess(cryptogram, letter, String.valueOf(encrypted_char));
                 player.updateAccuracy();
             }
         }
@@ -330,7 +330,7 @@ public class Game implements Serializable {
                 guessCount++;
                 //Update player stats here
                 player.incrementTotalGuesses();
-                checkGuess(cryptogram, letter);
+                checkGuess(cryptogram, letter, encrypted_guess.trim());
                 player.updateAccuracy();
             }
         }
@@ -386,12 +386,17 @@ public class Game implements Serializable {
         }
     }
 
-    public void checkGuess(Cryptogram cryptogram, char letter) {
+    public void checkGuess(Cryptogram cryptogram, char letter, String encryptedGuess) {
         String phrase = cryptogram.getPhrase();
-        for (int i = 0; i < phrase.length(); i++) {
-            if (Character.toUpperCase(phrase.charAt(i)) == Character.toUpperCase(letter)) {
-                player.incrementCorrectGuesses();
-                return; // only count once per guess, not per occurrence
+        String[] encrypted = cryptogram.getEncryptedPhrase();
+        for (int i = 0; i < encrypted.length; i++) {
+            if (encrypted[i].trim().equalsIgnoreCase(encryptedGuess.trim())) {
+                if (Character.toUpperCase(phrase.charAt(i)) == Character.toUpperCase(letter)) {
+                    player.incrementCorrectGuesses();
+                    return;
+                } else {
+                    return; // wrong letter for this slot
+                }
             }
         }
     }

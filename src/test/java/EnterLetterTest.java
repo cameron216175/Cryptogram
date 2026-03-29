@@ -4,9 +4,34 @@ import org.junit.jupiter.api.Test;
 import src.main.java.Game;
 import src.main.java.Player;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class EnterLetterTest {
+
+    private String findAbsentEncryptedValue(Game game, String cryptoType) {
+        if (cryptoType.equals("0")) {
+            return "99"; // always invalid for number cryptograms
+        }
+        // Collect all encrypted letter values actually in this cryptogram
+        Set<Character> used = new HashSet<>();
+        for (String slot : game.getCryptogram().getEncryptedPhrase()) {
+            if (slot != null && !slot.trim().isEmpty()) {
+                used.add(Character.toUpperCase(slot.trim().charAt(0)));
+            }
+        }
+        // Find a letter not in the cryptogram
+        for (char c = 'A'; c <= 'Z'; c++) {
+            if (!used.contains(c)) {
+                return String.valueOf(c);
+            }
+        }
+        // All 26 letters are used — extremely unlikely for a 30-40 char phrase,
+        // but fall back to a multi-char string that can never match a single-char slot
+        return "ABSENT";
+    }
 
     // Scenario 1: Valid letter entry returns Incomplete (not yet finished)
     @Test
@@ -39,16 +64,16 @@ public class EnterLetterTest {
         assertEquals("Error", result);
     }
 
-    // Scenario 3: Entering a letter that doesn't exist in the cryptogram returns Error
     @Test
     public void Scenario3Letters() {
         Player p = new Player("test");
         Game game = new Game(p, "1");
 
-        // "ZZZZZ" is very unlikely to be an encrypted value
-        String result = game.enterLetter(game.getCryptogram(), 'A', "ZZZZZ");
+        String absentValue = findAbsentEncryptedValue(game, "1");
+        String result = game.enterLetter(game.getCryptogram(), 'A', absentValue);
 
-        assertEquals("Error", result);
+        assertEquals("Error", result,
+                "Encrypted value '" + absentValue + "' is not in the cryptogram, should return Error");
     }
 
     @Test
