@@ -5,6 +5,7 @@ import java.nio.file.FileSystemNotFoundException;
 import java.util.*;
 
 
+
 public class Game implements Serializable {
     private Cryptogram cryptogram;
     private Player player;
@@ -477,22 +478,25 @@ public class Game implements Serializable {
         englishFrequencies.put('K', 0.69);englishFrequencies.put('X', 0.17);englishFrequencies.put('Q', 0.11);
         englishFrequencies.put('J', 0.10);englishFrequencies.put('Z', 0.07);
 
-        HashMap<Character, Integer> cryptoFrequencies = cryptogram.getFrequencies();
+        HashMap<String, Integer> cryptoFrequencies = cryptogram.getFrequencies();
         int total = 0;
         for (int count : cryptoFrequencies.values()) {
             total += count;
         }
         System.out.println("Letter  | Cryptogram % | English %");
         for (char c = 'A'; c <= 'Z'; c++) {
-            int count = 0;
-            if (cryptoFrequencies.containsKey(c)) {
-                count = cryptoFrequencies.get(c);
+            String key = String.valueOf(c);
+            double frequency = englishFrequencies.get(c);
+            if (cryptoFrequencies.containsKey(key)) {
+                int count = cryptoFrequencies.get(key);
                 double cryptogramPercentage = count * 100.0 / total;
-                double englishFrequenciesPercentage = englishFrequencies.get(c);
-                System.out.println(c + " | " + cryptogramPercentage + " % | " + englishFrequenciesPercentage + "% ");
+                System.out.println(key + " | " + cryptogramPercentage + " % | " + frequency + "% ");
+            } else {
+                System.out.println(key + " | 0% |"  + frequency + "%");
+            }
             }
         }
-        }
+
 
 
 

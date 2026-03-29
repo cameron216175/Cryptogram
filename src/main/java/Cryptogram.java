@@ -27,16 +27,20 @@ public abstract class Cryptogram implements Serializable {
 
     public Cryptogram() {}
 
-    public HashMap<Character, Integer> getFrequencies() {
+    public HashMap<String, Integer> getFrequencies() {
 
-        HashMap<Character, Integer> freq = new HashMap<>();
+        HashMap<String, Integer> freq = new HashMap<>();
 
-        for(char c : phrase.toCharArray()) {
+        for(String s : encrypted_phrase) {
 
-            if(!Character.isLetter(c)) continue;
-
-            freq.put(c, freq.getOrDefault(c, 0) + 1);
-
+            if (s != null && !s.trim().isEmpty()) {
+                String key = s.trim();
+                if(freq.containsKey(key)) {
+                    freq.put(key, freq.get(key) + 1);
+                } else {
+                    freq.put(key, 1);
+                }
+            }
         }
 
         return freq;
