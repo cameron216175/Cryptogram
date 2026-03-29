@@ -135,7 +135,7 @@ public class Main {
     }
 
     public static void printLeaderboard(Players players) {
-        ArrayList<Player> allPlayers =  players.getPlayers();
+        ArrayList<Player> allPlayers = new ArrayList<>(players.getPlayers());
         ArrayList<Player> topTen = new ArrayList<>();
         int index = 10;
         Player highestPlayer = allPlayers.get(0);
@@ -149,7 +149,7 @@ public class Main {
             topTen.add(highestPlayer);
             allPlayers.remove(highestPlayer);
             if (allPlayers.isEmpty()) {
-                continue;
+                break;
             }
             highestPlayer = allPlayers.getFirst();
         }
