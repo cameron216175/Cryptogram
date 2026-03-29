@@ -8,6 +8,7 @@ import src.main.java.Players;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
@@ -76,6 +77,13 @@ class PlayersTest {
     void testGetPlayer() {
         players.addPlayer(player);
         Assertions.assertEquals(player.getUsername(), players.getPlayer("conor").getUsername());
+    }
+
+    @Test
+    void testGetPlayers() {
+        players.addPlayer(player);
+        ArrayList<Player> listOfPlayers = players.getPlayers();
+        Assertions.assertEquals(player.getUsername(), listOfPlayers.getLast().getUsername());
     }
 
     @Test

@@ -105,6 +105,10 @@ public class Players {
         return null;
     }
 
+    public ArrayList<Player> getPlayers() {
+        return allPlayers;
+    }
+
     public List<Double> getAllPlayersAccuracies() {
         List<Double> stats = new ArrayList<>();
         for (Player Player : allPlayers) {
