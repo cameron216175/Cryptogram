@@ -31,8 +31,8 @@ public class Players {
                 myWriter.write(
                         player.getUsername() + "," +
                                 player.getTotalGuesses() + "," +
-                                player.getNumCryptogramsPlayed() + "," +
                                 player.getNumCryptogramsCompleted() + "," +
+                                player.getNumCryptogramsPlayed() + "," +
                                 player.getAccuracy() + "," +
                                 player.getCorrectGuesses()+ "\n");
             }
