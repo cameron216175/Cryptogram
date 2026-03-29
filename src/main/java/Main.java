@@ -138,45 +138,56 @@ public class Main {
         ArrayList<Player> allPlayers = new ArrayList<>(players.getPlayers());
         ArrayList<Player> topTen = new ArrayList<>();
         int index = 10;
-        Player highestPlayer = allPlayers.get(0);
-        printLineBreak("Leaderboard");
-        for (int i = 0; i < index; i++) {
-            for (Player player : allPlayers) {
-                if (player.getNumCryptogramsCompleted() > highestPlayer.getNumCryptogramsCompleted()) {
-                    highestPlayer = player;
-                }
-            }
-            topTen.add(highestPlayer);
-            allPlayers.remove(highestPlayer);
-            if (allPlayers.isEmpty()) {
-                break;
-            }
-            highestPlayer = allPlayers.getFirst();
-        }
+        if (!allPlayers.isEmpty()) {
+            Player highestPlayer = allPlayers.get(0);
+            printLineBreak("Leaderboard");
+            for (int i = 0; i < index; i++) {
+                for (Player player : allPlayers) {
+                    double playerRatio = player.getNumCryptogramsPlayed() == 0 ? 0 :
+                            (double) player.getNumCryptogramsCompleted() / player.getNumCryptogramsPlayed();
 
+                    double highestRatio = highestPlayer.getNumCryptogramsPlayed() == 0 ? 0 :
+                            (double) highestPlayer.getNumCryptogramsCompleted() / highestPlayer.getNumCryptogramsPlayed();
+
+                    if (playerRatio > highestRatio) {
+                        highestPlayer = player;
+                    }
+                }
+                topTen.add(highestPlayer);
+                allPlayers.remove(highestPlayer);
+                if (allPlayers.isEmpty()) {
+                    break;
+                }
+                highestPlayer = allPlayers.getFirst();
+            }
+        }
         int rank = 1;
 
         // Header
-        System.out.println("\u001b[34m╔═════════════════════════════════════╗");
-        System.out.println("║              LEADERBOARD            ║");
-        System.out.println("╠════╦════════════════════╦═══════════╣");
+        System.out.println("\u001b[34m╔═══════════════════════════════════════════════════════╗");
+        System.out.println("║              LEADERBOARD                              ║");
+        System.out.println("╠════╦════════════════════╦═════════════════════════════╣");
 
         // Column titles
-        System.out.printf("║ %-2s ║ %-18s ║ %-9s ║\n", "#", "Username", "Solved");
-        System.out.println("╠════╬════════════════════╬═══════════╣");
+        System.out.printf("║ %-2s ║ %-18s ║ %-9s ║\n", "#", "Username", "Completed divided by Played");
+        System.out.println("╠════╬════════════════════╬═════════════════════════════╣");
 
         for (Player player : topTen) {
+            double ratio = 0;
+            if (player.getNumCryptogramsPlayed() != 0) {
+                ratio = ((double) player.getNumCryptogramsCompleted() / player.getNumCryptogramsPlayed())* 100;
+            }
             System.out.printf(
-                    "\u001b[38;5;214m║ \u001b[34m%-2d \u001b[38;5;214m║ %-18s ║ %-9d ║\n",
+                    "\u001b[38;5;214m║ \u001b[34m%-2d \u001b[38;5;214m║ %-18s ║ %25.2f %% ║\n",
                     rank,
                     player.getUsername(),
-                    player.getNumCryptogramsCompleted()
+                    ratio
             );
             rank++;
         }
 
         // Footer
-        System.out.println("\u001b[34m╚════╩════════════════════╩═══════════╝");
+        System.out.println("\u001b[34m╚════╩════════════════════╩═════════════════════════════╝");
 
     }
 

@@ -496,28 +496,34 @@ public class Game implements Serializable {
         System.out.println("║          LETTER FREQUENCY ANALYSIS         ║");
         System.out.println("╠═══════╦════════════════╦═══════════════════╣");
         // Column titles
-        System.out.printf("║ %-5s ║ %-14s ║ %-17s ║\n", "Char", "Cryptogram %", "English %");
+        System.out.printf("║ %-5s ║ %-14s ║ %-17s ║\n", " Key ", "Cryptogram %", "English %");
         System.out.println("╠═══════╬════════════════╬═══════════════════╣");
-        for (char c = 'A'; c <= 'Z'; c++) {
-            String key = String.valueOf(c);
-            double frequency = (Double)englishFrequencies.get(c);
-            if (cryptoFrequencies.containsKey(key)) {
-                int count = (Integer)cryptoFrequencies.get(key);
-                double cryptogramPercentage = (double)count * (double)100.0F / (double)total;
-                System.out.printf(
-                        "\u001b[38;5;214m║ \u001b[34m%-5c \u001b[38;5;214m║ \u001b[34m%12.2f %% \u001b[38;5;214m║ \u001b[34m%15.2f %% \u001b[38;5;214m║\n",
-                        c,
-                        cryptogramPercentage,
-                        frequency
-                );
-            } else {
-                System.out.printf(
-                        "\u001b[38;5;214m║ \u001b[34m%-5c \u001b[38;5;214m║ %12.2f %% ║ %15.2f %% ║\n",
-                        c,
-                        0.0,
-                        frequency
-                );
+        for (String key : cryptoFrequencies.keySet()) {
+
+            int count = cryptoFrequencies.get(key);
+            double cryptogramPercentage = (double) count * 100.0 / total;
+
+            char plainLetter = '?';
+
+            if (cryptogram instanceof LetterCryptogram lc) {
+
+                char encrypted = key.charAt(0);
+                plainLetter = lc.getPlainLetter(encrypted);
+
+            } else if (cryptogram instanceof NumberCryptogram nc) {
+
+                int encrypted = Integer.parseInt(key);
+                plainLetter = nc.getPlainLetter(encrypted);
             }
+
+            double englishFrequency = englishFrequencies.getOrDefault(plainLetter, 0.0);
+
+            System.out.printf(
+                    "\u001b[38;5;214m║ \u001b[34m%-5s \u001b[38;5;214m║ \u001b[34m%12.2f %% \u001b[38;5;214m║ \u001b[34m%15.2f %% \u001b[38;5;214m║\n",
+                    key,   // 👈 encrypted symbol (letter OR number)
+                    cryptogramPercentage,
+                    englishFrequency
+            );
         }
         // Footer
         System.out.println("\u001b[34m╚═══════╩════════════════╩═══════════════════╝\u001b[0m");
