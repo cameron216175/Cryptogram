@@ -55,6 +55,7 @@ public class Main {
                         loadedGame.playGame();
                     }
 
+
                 }
                 default -> {
                     System.out.println("\u001B[31mInvalid input!");
