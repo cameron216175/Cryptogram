@@ -37,8 +37,8 @@ public class Game implements Serializable {
             System.out.print("\n");
             printCryptogram(this.cryptogram);
 
-            System.out.println("\n\u001b[35mWhat would you like to do? (enter 'help' to see a list of commands!)");
-            System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
+            System.out.println("\n\u001b[34mWhat would you like to do? (enter 'help' to see a list of commands!)");
+            System.out.print("\u001b[34m◇\u001b[38;5;214m◈\u001b[34m──►\u001b[0m ");
 
             Scanner sc = new Scanner(System.in);
             String input = sc.nextLine();
@@ -61,7 +61,7 @@ public class Game implements Serializable {
                     saveGame();
                 }
                 case "exit" -> {
-                    System.out.println("\u001b[35mExiting Game...\u001b[0m");
+                    System.out.println("\u001b[34mExiting Game...\u001b[0m");
                     exit = true;
                 }
                 case "help" -> help();
@@ -85,10 +85,15 @@ public class Game implements Serializable {
                 case "hint" -> {
                     getHint();
                 }
-                case "solution" -> {
+                case "solt" -> {
                     showSolution();
+                    exit = true;
+                    System.out.println("\u001b[34mto quit type anything");
+                    System.out.print("\u001b[34m◇\u001b[38;5;214m◈\u001b[34m──►\u001b[0m ");
+                    String stats = sc.nextLine();
+
                 }
-                case "frequency"->{
+                case "freq"->{
                     viewFrequencies();
                 }
                 default -> {
@@ -165,24 +170,24 @@ public class Game implements Serializable {
 
     public static void help() {
         printLineBreak("Commands");
-        System.out.println("        \u001b[35m               ╔═════════════════════════════════════════════════════════╗");
-        System.out.print("        \u001b[35m╔══════════════╣");
-        System.out.println("\u001b[34m ◈ help - lists commands                                 \u001b[35m║");
-        System.out.print("        \u001b[35m║  ◈  HELP  ◈  ║");
-        System.out.println("\u001b[34m ◈ exit - quits current cryptogram                       \u001b[35m║");
-        System.out.print("        \u001b[35m╚══════════════╣");
-        System.out.println("\u001b[34m ◈ undo <a/14> - type undo and the indice                \u001b[35m║");
-        System.out.print("        \u001b[35m               ║");
-        System.out.println("\u001b[34m ◈ enter <a> <c/14> - type enter the char and the indice \u001b[35m║");
-        System.out.print("        \u001b[35m               ║");
-        System.out.println("\u001b[34m ◈ hint - Gives a letter in the correct place            \u001b[35m║");
-        System.out.print("        \u001b[35m               ║");
-        System.out.println("\u001b[34m ◈ save - saves the current cryptogram                   \u001b[35m║");
-        System.out.print("        \u001b[35m               ║");
-        System.out.println("\u001b[34m ◈ frequency - view letter frequencies                   \u001b[35m║");
-        System.out.print("        \u001b[35m               ║");
-        System.out.println("\u001b[34m ◈ solution - reveals the entire cryptogram solution     \u001b[35m║");
-        System.out.println("        \u001b[35m               ╚═════════════════════════════════════════════════════════╝");
+        System.out.println("        \u001b[34m               ╔═════════════════════════════════════════════════════════╗");
+        System.out.print("        \u001b[34m╔══════════════╣");
+        System.out.println("\u001b[38;5;214m ◈ help - lists commands                                 \u001b[34m║");
+        System.out.print("        \u001b[34m║  \u001b[38;5;214m◈  HELP  ◈\u001b[34m  ║");
+        System.out.println("\u001b[38;5;214m ◈ exit - quits current cryptogram                       \u001b[34m║");
+        System.out.print("        \u001b[34m╚══════════════╣");
+        System.out.println("\u001b[38;5;214m ◈ undo <a/14> - type undo and the indice                \u001b[34m║");
+        System.out.print("        \u001b[34m               ║");
+        System.out.println("\u001b[38;5;214m ◈ enter <a> <c/14> - type enter the char and the indice \u001b[34m║");
+        System.out.print("        \u001b[34m               ║");
+        System.out.println("\u001b[38;5;214m ◈ hint - Gives a letter in the correct place            \u001b[34m║");
+        System.out.print("        \u001b[34m               ║");
+        System.out.println("\u001b[38;5;214m ◈ save - saves the current cryptogram                   \u001b[34m║");
+        System.out.print("        \u001b[34m               ║");
+        System.out.println("\u001b[38;5;214m ◈ freq - view letter frequencies                        \u001b[34m║");
+        System.out.print("        \u001b[34m               ║");
+        System.out.println("\u001b[38;5;214m ◈ solt - reveals the entire cryptogram solution         \u001b[34m║");
+        System.out.println("        \u001b[34m               ╚═════════════════════════════════════════════════════════╝");
         System.out.println("\u001b[0m");
     }
 
@@ -251,7 +256,7 @@ public class Game implements Serializable {
                         else {
                             if (!alreadyOverriding) {
                                 System.out.println("\u001b[31mYou have already mapped a guess to \u001b[34m" + encrypted_char + "\u001b[31m!\nPlease enter '1' to override it!\n");
-                                System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
+                                System.out.print("\u001b[34m◇\u001b[38;5;214m◈\u001b[34m──►\u001b[0m ");
                                 String input = sc.nextLine();
 
                                 if (!input.equals("1")) {
@@ -303,7 +308,7 @@ public class Game implements Serializable {
                     else {
                         if (!alreadyOverriding) {
                             System.out.println("\u001b[31mYou have already mapped a guess to \u001b[34m" + encrypted_guess.substring(0, encrypted_guess.length() - 1) + "\u001b[31m!\nPlease enter 1 to override it!\n");
-                            System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
+                            System.out.print("\u001b[34m◇\u001b[38;5;214m◈\u001b[34m──►\u001b[0m ");
                             String input = sc.nextLine();
 
                             if (!input.equals("1")) {
@@ -373,7 +378,7 @@ public class Game implements Serializable {
         }
 
         if (found) {
-            System.out.println("\u001b[35mUndid guess for: \u001b[34m" + undoLetter + "\u001b[0m");
+            System.out.println("\u001b[34mUndid guess for: \u001b[34m" + undoLetter + "\u001b[0m");
             guessCount--;
         } else {
             System.out.println("\u001b[31mNo guess found for " + undoLetter + "!\u001b[0m");
@@ -400,7 +405,7 @@ public class Game implements Serializable {
         // Check if save file already exists and prompt for overwrite
         if (file.exists()) {
             System.out.println("\u001b[34mA saved game already exists. Enter '1' to overwrite it, anything else to cancel:");
-            System.out.print("\u001b[34m◇\u001b[35m◈\u001b[34m──►\u001b[0m ");
+            System.out.print("\u001b[34m◇\u001b[38;5;214m◈\u001b[34m──►\u001b[0m ");
             Scanner sc = new Scanner(System.in);
             String input = sc.nextLine();
             if (!input.equals("1")) {
@@ -459,9 +464,13 @@ public class Game implements Serializable {
     }
 
     public void showSolution() {
-        System.out.println("-----Solution is:-----");
-        System.out.println(getSolution());
-        System.out.println("----------------------");
+        System.out.println("\u001b[34m╔════════════════════════════════════════════════════════════════════════════════════════╗");
+        System.out.println("║                                        SOLUTION                                        ║");
+        System.out.println("╠════════════════════════════════════════════════════════════════════════════════════════╣");
+
+        System.out.println("\u001b[38;5;214m   " + getSolution());
+
+        System.out.println("\u001b[34m╚════════════════════════════════════════════════════════════════════════════════════════╝\u001b[0m");
     }
 
     public void viewFrequencies() {
@@ -482,19 +491,30 @@ public class Game implements Serializable {
         for (int count : cryptoFrequencies.values()) {
             total += count;
         }
-        System.out.println("Letter  | Cryptogram % | English %");
+        // Header
+        System.out.println("\u001b[34m╔════════════════════════════════════════════╗");
+        System.out.println("║          LETTER FREQUENCY ANALYSIS         ║");
+        System.out.println("╠═══════╦════════════════╦═══════════════════╣");
+        // Column titles
+        System.out.printf("║ %-5s ║ %-14s ║ %-17s ║\n", "Char", "Cryptogram %", "English %");
+        System.out.println("╠═══════╬════════════════╬═══════════════════╣");
         for (char c = 'A'; c <= 'Z'; c++) {
-            int count = 0;
-            if (cryptoFrequencies.containsKey(c)) {
-                count = cryptoFrequencies.get(c);
+            int count = cryptoFrequencies.getOrDefault(c, 0);
+            if (count > 0) {
                 double cryptogramPercentage = count * 100.0 / total;
-                double englishFrequenciesPercentage = englishFrequencies.get(c);
-                System.out.println(c + " | " + cryptogramPercentage + " % | " + englishFrequenciesPercentage + "% ");
+                double englishPercentage = englishFrequencies.get(c);
+
+                System.out.printf(
+                        "\u001b[38;5;214m║ \u001b[34m%-5c \u001b[38;5;214m║ %-14.2f ║ %-17.2f ║\n",
+                        c,
+                        cryptogramPercentage,
+                        englishPercentage
+                );
             }
         }
+        // Footer
+        System.out.println("\u001b[34m╚═══════╩════════════════╩═══════════════════╝\u001b[0m");
         }
-
-
 
     public void getHint() {
 
@@ -503,17 +523,17 @@ public class Game implements Serializable {
         ArrayList<Character> unguessed = new ArrayList<>();
         for (int i = 0; i < phrase.length(); i++) {
             char c = Character.toUpperCase(phrase.charAt(i));
-            if (playerGameMapping.get(i).equals("- ") && phrase.charAt(i) != ' ') {
+            if (playerGameMapping.get(i).equals("- ") && phrase.charAt(i) != ' ' && !unguessed.contains(c)) {
                 unguessed.add(c);
             }
         }
 
         // Checks if the user can actually be given a hint
         if(unguessed.isEmpty()){
-            System.out.println("No more hints were found.");
+            System.out.println("\u001b[34mNo more hints were found.");
             return;
         } else if (unguessed.size() == 1) {
-            System.out.println("There is only one letter left, you are not allowed to use anymore hints");
+            System.out.println("\u001b[34mThere is only one letter left, you are not allowed to use anymore hints");
             return;
         }
 
@@ -540,7 +560,7 @@ public class Game implements Serializable {
         player.incrementCorrectGuesses();
         player.updateAccuracy();
 
-        System.out.println("Hint: Here are all the positions for the letter " + hintLetter);
+        System.out.println("\u001b[34mHint: Here are all the positions for the letter \u001b[38;5;214m" + hintLetter);
     }
 
     public String getCryptoType() {
@@ -581,7 +601,7 @@ public class Game implements Serializable {
 
         else if (completion.equals("Incorrect")) {
             printLineBreak(" ");
-            System.out.println("\u001b[35mIncorrect! Please try again!\u001b[0m");
+            System.out.println("\u001b[34mIncorrect! Please try again!\u001b[0m");
         }
         System.out.print("\n");
 
