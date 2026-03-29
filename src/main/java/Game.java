@@ -486,7 +486,7 @@ public class Game implements Serializable {
         englishFrequencies.put('K', 0.69);englishFrequencies.put('X', 0.17);englishFrequencies.put('Q', 0.11);
         englishFrequencies.put('J', 0.10);englishFrequencies.put('Z', 0.07);
 
-        HashMap<Character, Integer> cryptoFrequencies = cryptogram.getFrequencies();
+        HashMap<String, Integer> cryptoFrequencies = this.cryptogram.getFrequencies();
         int total = 0;
         for (int count : cryptoFrequencies.values()) {
             total += count;
@@ -499,16 +499,23 @@ public class Game implements Serializable {
         System.out.printf("║ %-5s ║ %-14s ║ %-17s ║\n", "Char", "Cryptogram %", "English %");
         System.out.println("╠═══════╬════════════════╬═══════════════════╣");
         for (char c = 'A'; c <= 'Z'; c++) {
-            int count = cryptoFrequencies.getOrDefault(c, 0);
-            if (count > 0) {
-                double cryptogramPercentage = count * 100.0 / total;
-                double englishPercentage = englishFrequencies.get(c);
-
+            String key = String.valueOf(c);
+            double frequency = (Double)englishFrequencies.get(c);
+            if (cryptoFrequencies.containsKey(key)) {
+                int count = (Integer)cryptoFrequencies.get(key);
+                double cryptogramPercentage = (double)count * (double)100.0F / (double)total;
                 System.out.printf(
-                        "\u001b[38;5;214m║ \u001b[34m%-5c \u001b[38;5;214m║ %-14.2f ║ %-17.2f ║\n",
+                        "\u001b[38;5;214m║ \u001b[34m%-5c \u001b[38;5;214m║ \u001b[34m%12.2f %% \u001b[38;5;214m║ \u001b[34m%15.2f %% \u001b[38;5;214m║\n",
                         c,
                         cryptogramPercentage,
-                        englishPercentage
+                        frequency
+                );
+            } else {
+                System.out.printf(
+                        "\u001b[38;5;214m║ \u001b[34m%-5c \u001b[38;5;214m║ %12.2f %% ║ %15.2f %% ║\n",
+                        c,
+                        0.0,
+                        frequency
                 );
             }
         }
