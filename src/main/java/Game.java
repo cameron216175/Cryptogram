@@ -523,7 +523,7 @@ public class Game implements Serializable {
         ArrayList<Character> unguessed = new ArrayList<>();
         for (int i = 0; i < phrase.length(); i++) {
             char c = Character.toUpperCase(phrase.charAt(i));
-            if (playerGameMapping.get(i).equals("- ") && phrase.charAt(i) != ' ' && !unguessed.contains(c)) {
+            if ((playerGameMapping.get(i).equals("- ") || phrase.charAt(i) != playerGameMapping.get(i).charAt(0)) && phrase.charAt(i) != '"' && phrase.charAt(i) != ' ' && !unguessed.contains(c) ) {
                 unguessed.add(c);
             }
         }
